@@ -12,39 +12,16 @@ facadeAnimation anim;
 void setup() {
   frameRate(25);
   size(1200, 400);
-  
   aec = new AEC();
   aec.init();
   animations = new ArrayList<facadeAnimation>();
-  Votes = new ArrayList<Integer>();
- 
   
-  animations.add(new starFieldVisualization(#FF0000,#0000FF,Votes)); 
-  animations.add(new starFieldAnimation(#FF0000,#0000FF,20));
-  animations.add(new starFieldAnimation(#FF0000,#0000FF,50));
-  animations.add(new starFieldAnimation(#FF0000,#0000FF,100));
-  animations.add(new starFieldAnimation(#FF0000,#0000FF,150));
-  animations.add(new starFieldAnimation(#FF0000,#0000FF,200));  
-
-  animations.add(new equalizerSideAnimation(#D070FF,#7066E8,#66E8E0,#76FFA3));
- 
-  color colseq[] = {#7066E8,#7DBDFF,#66E8E0,#76FFA3,#66E8E0,#7DBDFF,#7066E8};
-  animations.add(new equalizerHorizontalAnimation(colseq));
-  animations.add(new equalizerGradientAnimation(#5ED3FF,#FFEC64));
-  animations.add(new equalizerGradientAnimation(#D742FF,#3C85FF));
-  animations.add(new equalizerVerticalAnimation());
-  animations.add(new equalizerSymetricHorizontalGradientAnimation(#62CC7E,#1C993C,#BDFF94,#9062CC));
-  animations.add(new equalizerSymetricHorizontalGradientAnimation(#FFD661,#FF8561,#FF8561,#BB62FF));
-  animations.add(new growingLine(#BB62FF));
-  animations.add(new growingLine(#FF8561));
-/*  animations.add(new starFieldAnimation(#FFFFFF,#999999,#555555,20));
-  animations.add(new starFieldAnimation(#FF6045,#FF9D52,#FFC445,20));
-  animations.add(new starFieldAnimation(#E84F47,#E847CB,#E04EFF,20));
-  */
+  Votes = generateVotes(.2,1000); 
+  animations.add(new starFieldVisualization(#FF0000,#0000FF)); 
   
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
-  anim.init();
+  startAnimation(anim);
 }
 
 void draw() {
@@ -57,6 +34,36 @@ void draw() {
   aec.drawSides();
 }
 
+ArrayList<Integer> generateVotes(float yesProb,int numOfVotes){
+  ArrayList<Integer> votes = new ArrayList<Integer>();
+  for(int i=0;i<1000;i++){
+    float v = random(1);
+    int vote ;
+    if(v<yesProb){
+      if(v<yesProb/2.0){
+        vote=-2;
+      }else{
+        vote=-1;
+      }
+    }else{
+      if(v>1-(1-yesProb)/2.0){
+        vote=1;
+      }else{
+        vote=2;
+      }
+    }
+    votes.add(vote);
+  }
+  return votes;
+}
+void startAnimation(facadeAnimation fa){
+  fa.init();
+  if (anim instanceof VotesVisualization) {
+      VotesVisualization vv = (VotesVisualization)anim;
+      vv.updateVotes(Votes);
+   }
+}
+
 void keyPressed() {
    //aec.keyPressed(key);
    if(key == ' '){
@@ -64,7 +71,8 @@ void keyPressed() {
        animationIterator = animations.iterator();   
      }
      anim = animationIterator.next();
-     anim.init();
+     startAnimation(anim);
+     
    }
    //save screenshot
    if(key == 's'){
@@ -72,28 +80,39 @@ void keyPressed() {
       save(filename);
    }
    //voting keys{
+     int vote=0;
+     boolean hasVoted=true;
    switch(key){
      case 'q':
-       Votes.add(-2);
+       vote=-2;
        break;
      case 'w':
-       Votes.add(-1);      
+       vote=-1;
        break;
      case 'e':
-       Votes.add( 1);
+       vote=1;
        break;
      case 'r':
-       Votes.add( 2);
+       vote=1;
        break;
+     default:
+       hasVoted=false;
    } 
-   int positiveVotes = 0; 
-   for(int i=0;i<Votes.size();i++){
-      if(Votes.get(i)<0){
-        positiveVotes++;
-      } 
+   if(hasVoted){
+     Votes.add(vote);
+     if (anim instanceof VotesVisualization) {
+        VotesVisualization vv = (VotesVisualization)anim;
+        vv.addVote(vote);
+     }
+     int positiveVotes = 0; 
+     for(int i=0;i<Votes.size();i++){
+        if(Votes.get(i)<0){
+          positiveVotes++;
+        } 
+     }
+     int percentageOfPositiveVotes  = round(positiveVotes/float(Votes.size())*100);
+     println(Votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
    }
-   int percentageOfPositiveVotes  = round(positiveVotes/float(Votes.size())*100);
-   println(Votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
 }
 void mousePressed(){
   println("x:"+mouseX/aec.getScaleX()+" y:"+mouseY/aec.getScaleY());

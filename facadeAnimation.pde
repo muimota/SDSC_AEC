@@ -1,15 +1,17 @@
 //martin 23/05/2014
-//yes , rather yer , rather no, no
+//yes 2 , rather yer 1 , rather no -1 , no -2
 
 
-abstract class facadeAnimation{  
-  
-
-  abstract void init();
-  abstract void update();
-  abstract void draw();
+public interface facadeAnimation{   
+  void init();
+  void update();
+  void draw();
 }
 
+interface VotesVisualization {
+ void updateVotes(ArrayList<Integer> votes);
+ void addVote(int vote);
+}
 /****
 
 EQUALIZERS
@@ -17,11 +19,12 @@ EQUALIZERS
 *****/
 
 //Basic equalizerAnimation allS pixel of the same color
-class equalizerAnimation extends facadeAnimation{
+class equalizerAnimation implements facadeAnimation{
   float[] eqValues;
   float[] peakValues;
   float smoothRatio;
   int frameCounter;
+  
   void init(){
     frameCounter = 0;
     smoothRatio  = .1;
@@ -162,21 +165,19 @@ class equalizerSymetricHorizontalGradientAnimation extends equalizerSymetricHori
 /***
 STARFIELD
 ***/
-class starFieldAnimation extends facadeAnimation{
+class starFieldAnimation implements facadeAnimation{
   ArrayList<PVector> stars;
-  
   color[] starColors;
   int numberOfStars;
+  
   starFieldAnimation(color col0,color col1,int _numberOfStars){
     starColors  =new color[2];
     starColors[0] = col0;
     starColors[1] = col1;
     numberOfStars = _numberOfStars;
-    stars = new ArrayList<PVector>(_numberOfStars);
-    
+    stars = new ArrayList<PVector>(_numberOfStars);  
   }
   void init(){
-    println(stars.size());
     for(int i=0;i<numberOfStars;i++){
       PVector star = new PVector();
       star.x = random(40);
@@ -208,15 +209,23 @@ class starFieldAnimation extends facadeAnimation{
   } 
 }
 
-class starFieldVisualization extends starFieldAnimation{
-  int numberOfVotes;
-  int frameNumOfLastVote;
-  starFieldVisualization(color col0,color col1, ArrayList<Integer> _Votes){
+class starFieldVisualization extends starFieldAnimation implements VotesVisualization{
+  float minSpeed,maxSpeed;
+  int  frameNumOfLastVote;
+  
+  starFieldVisualization(color col0,color col1){
     super(col0,col1,0);
-    Votes = _Votes;
-    numberOfVotes = Votes.size();
+    frameNumOfLastVote=0;
+    minSpeed = 0.1;
+    maxSpeed = 2.0;
   }
+  
   void init(){
+    stars = new ArrayList<PVector>();
+    
+    
+  }
+  void updateVotes(ArrayList<Integer> votes){
     stars = new ArrayList<PVector>();
     for(int i=0;i<Votes.size();i++){
       PVector star = new PVector();
@@ -230,7 +239,8 @@ class starFieldVisualization extends starFieldAnimation{
       stars.add(star);
     }
   }
-  void addVote(Integer vote){
+  
+  void addVote(int vote){
     PVector star = new PVector();
       star.x = 30;
       star.y = round(random(24));
@@ -242,16 +252,14 @@ class starFieldVisualization extends starFieldAnimation{
       frameNumOfLastVote = frameCount;
       stars.add(star);
   }
+  
   //checks if a vote has been added
   void update(){
-    for(int i = numberOfVotes;i<Votes.size();i++){
-      addVote(Votes.get(i));
-    }
-    numberOfVotes = Votes.size();
     //update positions
-     for(int i=0;i<numberOfVotes;i++){
+    int numberOfStars = stars.size();
+     for(int i=0;i<numberOfStars;i++){
        PVector star = stars.get(i);
-       float speed = map(i,0,numberOfVotes,0.1,2);
+       float speed = map(i,-1,numberOfStars-1,minSpeed,maxSpeed);
        star.x = (star.x + speed) % 40.0;
      }
   }
@@ -277,11 +285,11 @@ class starFieldVisualization extends starFieldAnimation{
 /***
 GROWING LINE
 ***/
-class growingLine extends facadeAnimation{
+class growingLineAnimation implements facadeAnimation{
  float speed,position;
  color lineColor;
  
- growingLine(color _lineColor){
+ growingLineAnimation(color _lineColor){
    lineColor = _lineColor;
  }
  
