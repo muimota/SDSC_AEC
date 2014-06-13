@@ -4,24 +4,24 @@ import java.util.Iterator;
 
 AEC aec;
 
-ArrayList<Integer> Votes; //-2 NO,-1 RNO,1 RYES,2 YES
-ArrayList<facadeAnimation> animations;
-Iterator<facadeAnimation> animationIterator;
-facadeAnimation anim;
+ArrayList<Integer> votes; //-2 NO,-1 RNO,1 RYES,2 YES
+ArrayList<facadeVisualization> animations;
+Iterator<facadeVisualization> animationIterator;
+facadeVisualization anim;
 
 void setup() {
   frameRate(25);
   size(1200, 400);
   aec = new AEC();
   aec.init();
-  animations = new ArrayList<facadeAnimation>();
+  animations = new ArrayList<facadeVisualization>();
   
-  Votes = generateVotes(.2,1000); 
+  votes = generateVotes(.2,1000); 
   animations.add(new starFieldVisualization(#FF0000,#0000FF)); 
   
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
-  startAnimation(anim);
+  anim.initVotes(votes);
 }
 
 void draw() {
@@ -34,7 +34,7 @@ void draw() {
   aec.drawSides();
 }
 
-ArrayList<Integer> generateVotes(float yesProb,int numOfVotes){
+ArrayList<Integer> generateVotes(float yesProb,int numOfvotes){
   ArrayList<Integer> votes = new ArrayList<Integer>();
   for(int i=0;i<1000;i++){
     float v = random(1);
@@ -56,13 +56,6 @@ ArrayList<Integer> generateVotes(float yesProb,int numOfVotes){
   }
   return votes;
 }
-void startAnimation(facadeAnimation fa){
-  fa.init();
-  if (anim instanceof VotesVisualization) {
-      VotesVisualization vv = (VotesVisualization)anim;
-      vv.updateVotes(Votes);
-   }
-}
 
 void keyPressed() {
    //aec.keyPressed(key);
@@ -71,8 +64,7 @@ void keyPressed() {
        animationIterator = animations.iterator();   
      }
      anim = animationIterator.next();
-     startAnimation(anim);
-     
+     anim.initVotes(votes);
    }
    //save screenshot
    if(key == 's'){
@@ -99,19 +91,17 @@ void keyPressed() {
        hasVoted=false;
    } 
    if(hasVoted){
-     Votes.add(vote);
-     if (anim instanceof VotesVisualization) {
-        VotesVisualization vv = (VotesVisualization)anim;
-        vv.addVote(vote);
-     }
+     votes.add(vote);
+     anim.addVote(vote);
+     
      int positiveVotes = 0; 
-     for(int i=0;i<Votes.size();i++){
-        if(Votes.get(i)<0){
+     for(int i=0;i<votes.size();i++){
+        if(votes.get(i)<0){
           positiveVotes++;
         } 
      }
-     int percentageOfPositiveVotes  = round(positiveVotes/float(Votes.size())*100);
-     println(Votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
+     int percentageOfPositiveVotes  = round(positiveVotes/float(votes.size())*100);
+     println(votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
    }
 }
 void mousePressed(){
