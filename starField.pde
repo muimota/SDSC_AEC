@@ -5,27 +5,53 @@ STARFIELD
 
 class starFieldVisualization extends facadeVisualization{
   ArrayList<PVector> stars;
+  ArrayList<PVector> votingStars;
+  ArrayList<Integer> votingFrames;
+  //nomber of frames that a new vote glitters
+  int glitterFrames  = 200;
+  int maxStars;
+  
   color[] starColors;
   
   float minSpeed,maxSpeed;
-  int  frameNumOfLastVote;
   
-  starFieldVisualization(color col0,color col1){
+ 
+  starFieldVisualization(color col0,color col1,float _minSpeed,float _maxSpeed, int _maxStars ){
     starColors  =new color[2];
     starColors[0] = col0;
     starColors[1] = col1;
-    frameNumOfLastVote=0;
-    minSpeed = 0.1;
-    maxSpeed = 2.0;
+    minSpeed = _minSpeed;
+    maxSpeed = _maxSpeed;
+    maxStars = _maxStars;
+  }
+  starFieldVisualization(color col0,color col1,float minSpeed,float maxSpeed ){
+    this(col0,col1,minSpeed,maxSpeed,10000);
+  }
+  
+  starFieldVisualization(color col0,color col1,int maxStars){
+    this(col0,col1,0.1,0.5,maxStars );
+  }
+  starFieldVisualization(color col0,color col1){
+    this(col0,col1,0.1,0.5 );
   }
   
   void initVotes(ArrayList<Integer> votes){
     stars = new ArrayList<PVector>();
-    for(int i=0;i<votes.size();i++){
+    votingStars  = new ArrayList<PVector>();
+    votingFrames = new ArrayList<Integer>();
+    int starsCount = min(votes.size(),maxStars);
+    
+    for(int i=0;i<starsCount;i++){
       PVector star = new PVector();
       star.x = random(40);
       star.y = random(24);
-      if(votes.get(i)<0){
+      int voteIndex;
+      if(starsCount>votes.size()){
+        voteIndex = i;
+      }else{
+        voteIndex = int(random(votes.size()));
+      }
+      if(votes.get(voteIndex)<0){
         star.z=0;
       }else{
         star.z=1;
@@ -43,8 +69,12 @@ class starFieldVisualization extends facadeVisualization{
       }else{
         star.z=1;
       }
-      frameNumOfLastVote = frameCount;
+      votingStars.add(star);
+      votingFrames.add(frameCount);
       stars.add(star);
+      if(stars.size()>maxStars){
+        stars.remove(0);
+      }
   }
   
   //checks if a vote has been added
@@ -58,15 +88,26 @@ class starFieldVisualization extends facadeVisualization{
      }
   }
   void draw(){
-    
+     
      for(int i=0;i<stars.size();i++){
        PVector star = stars.get(i);
-       fill(starColors[floor(star.z)]);
+      
        //last vote
-       if(i==(stars.size()-1) && (frameCount-frameNumOfLastVote)<=25){
-         color col = lerpColor(#FFFFFF,starColors[floor(star.z)],(frameCount-frameNumOfLastVote)/25.0);
+       int votingStarIndex = votingStars.indexOf(star);
+       if(votingStarIndex!=-1){
+         float glitter = (frameCount-votingFrames.get(votingStarIndex))/float(glitterFrames);
+         if(glitter>1){
+           votingStars.remove(votingStarIndex);
+           votingFrames.remove(votingStarIndex);
+           println(votingStars.size());
+         }
+        
+         color col = lerpColor(#FFFFFF,starColors[floor(star.z)],glitter);
          fill(col);
+       }else{
+          fill(starColors[floor(star.z)]);
        }
+       
        if(star.x<10){
          rect(floor(star.x)-floor(star.x)%2,floor(star.y),2,1);
        }else{
