@@ -2,15 +2,14 @@
 STACKS
 ***/
 
-
 class stackVisualization extends facadeVisualization{
   color yesColor, noColor, lineColor,lineAlpha;
-  int yesVotes,noVotes;
   int yesBricks,noBricks,lineRow;
   int lineWidth;
-  
+  String name;
   
   stackVisualization(color _yesColor, color _noColor, color _lineColor, int _lineWidth ){ 
+    visualizationName = "stackVisualization";
     yesColor  = _yesColor;
     noColor   = _noColor;
     lineColor = _lineColor;
@@ -23,16 +22,7 @@ class stackVisualization extends facadeVisualization{
   }
   
   void initVotes(ArrayList<Integer> votes){
-    float ratio;
-    int totalVotes = votes.size();
-    yesVotes=noVotes=0;
-    for(int i=0;i<totalVotes;i++){
-      if(votes.get(i)<0){
-        yesVotes++;
-      }else{
-        noVotes++;
-      }
-    }
+    super.initVotes(votes);
     yesBricks = noBricks = 0;
     updateBricks(3);
   }
@@ -50,14 +40,8 @@ class stackVisualization extends facadeVisualization{
   }
   
   void addVote(int vote){
-    int totalVotes;
-    if(vote<0){
-      yesVotes++;
-    }else{
-      noVotes++;
-    }
+    super.addVote(vote);
     Ani.killAll() ;
-    totalVotes = yesVotes + noVotes;
     lineRow = floor(map(yesVotes,0,totalVotes,0,24));
     lineAlpha=255;
     Ani.to(this,2,"lineAlpha",0,Ani.LINEAR,"onEnd:updateBricks");
@@ -73,7 +57,6 @@ class stackVisualization extends facadeVisualization{
    //YES
    offset=ceil(yesBricks);
    rows = min(24,offset/40);
-   rows = min(24,offset/40);
    col  = offset%40;
    
    fill(yesColor);
@@ -83,7 +66,6 @@ class stackVisualization extends facadeVisualization{
    //NO 
    offset=ceil(noBricks);
    rows = min(24,offset/40);
-   rows = min(24,offset/40);
    col  = offset%40;
    
    fill(noColor);
@@ -92,7 +74,6 @@ class stackVisualization extends facadeVisualization{
    
    fill(color(red(lineColor),green(lineColor),blue(lineColor),lineAlpha));
    rect(0,lineRow-floor(lineWidth/2.0),40,lineWidth);
-  
   } 
 }
 

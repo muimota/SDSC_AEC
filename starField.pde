@@ -17,6 +17,7 @@ class starFieldVisualization extends facadeVisualization{
   
  
   starFieldVisualization(color col0,color col1,float _minSpeed,float _maxSpeed, int _maxStars ){
+     visualizationName = "starsVisualization";
     starColors  =new color[2];
     starColors[0] = col0;
     starColors[1] = col1;
@@ -36,6 +37,7 @@ class starFieldVisualization extends facadeVisualization{
   }
   
   void initVotes(ArrayList<Integer> votes){
+    super.initVotes(votes);
     stars = new ArrayList<PVector>();
     votingStars  = new ArrayList<PVector>();
     votingFrames = new ArrayList<Integer>();
@@ -61,6 +63,8 @@ class starFieldVisualization extends facadeVisualization{
   }
   
   void addVote(int vote){
+    super.addVote(vote);
+    
     PVector star = new PVector();
       star.x = 30;
       star.y = round(random(24));
@@ -107,7 +111,6 @@ class starFieldVisualization extends facadeVisualization{
        }else{
           fill(starColors[floor(star.z)]);
        }
-       
        if(star.x<10){
          rect(floor(star.x)-floor(star.x)%2,floor(star.y),2,1);
        }else{

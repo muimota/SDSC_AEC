@@ -1,53 +1,57 @@
 class stripeVisualization extends facadeVisualization{
-  color lineColor,lineAlpha;
-  int yesVotes,noVotes;
+  color lineColor;
   int lineRow;
   int lineWidth;
+  int lineAlpha,linePos;//k.i.t.t effect
+  
   
   
   stripeVisualization(color _lineColor, int _lineWidth ){ 
+    visualizationName = "stripeVisualization";
     lineColor = _lineColor;
-    lineAlpha = 1;
+    lineAlpha = 255;
     lineWidth = _lineWidth;
   }
   
   
   void initVotes(ArrayList<Integer> votes){
-    float ratio;
-    int totalVotes = votes.size();
-    yesVotes=noVotes=0;
-    for(int i=0;i<totalVotes;i++){
-      if(votes.get(i)<0){
-        yesVotes++;
-      }else{
-        noVotes++;
-      }
-    }
-    updateLine(3);
+    super.initVotes(votes);
+    lineRow = round(map(yesVotes,0,totalVotes,0,24));
   }
   
-  
-  void updateLine(float time){
-    int totalVotes = yesVotes + noVotes;
-    Ani.killAll() ;
-    Ani.to(this,time,"lineRow",floor(map(yesVotes,0,totalVotes,0,24)));
-  }
   
   void addVote(int vote){
-    if(vote<0){
-      yesVotes++;
-    }else{
-      noVotes++;
-    }
-    updateLine(2);
+    super.addVote(vote);
+   // lineRow = round(map(yesVotes,0,totalVotes,0,24));
+    Ani.to(this,1 ,"lineRow",round(map(yesVotes,0,totalVotes,0,24)),Ani.LINEAR);
+   /*
+    AniSequence seq = new AniSequence(Ani.papplet());
+    seq.beginStep();
+      seq.add(Ani.to(this,1 ,"lineAlpha",255 ,Ani.LINEAR));
+      seq.add(Ani.to(this,1 ,"linePos" ,40 ,Ani.LINEAR));
+    seq.endStep();
+    seq.add(Ani.to(this,1 ,"linePos" ,40*2 ,Ani.LINEAR));
+    seq.beginStep();
+      seq.add(Ani.to(this,1 ,"lineAlpha",0 ,Ani.LINEAR));
+      seq.add(Ani.to(this,1 ,"linePos" ,40*3 ,Ani.LINEAR));
+    seq.endStep();
+   */
   }
     
-   
+  void update(){
+    linePos +=1;
+  }
+ 
+  
   void draw(){
     
-   lineAlpha  = round(map(sin(frameCount*0.06),-1,1,128,255));
-   fill(color(red(lineColor),green(lineColor),blue(lineColor),lineAlpha));
-   rect(0,lineRow-floor(lineWidth/2.0),40,lineWidth);
-  
+   if(lineAlpha>0){
+     int lineLength = 30;
+     for(int i=0;i<lineLength;i++){
+       fill(color(red(lineColor),green(lineColor),blue(lineColor),map(i,0,lineLength,0,lineAlpha)));
+       rect((linePos+i)%40,lineRow-floor(lineWidth/2.0),1,lineWidth);
+     }
+   }
+    
   } 
 }

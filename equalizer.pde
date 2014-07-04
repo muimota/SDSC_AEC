@@ -18,16 +18,12 @@ int sequenceIndex = 0;
 int sequenceTime  = 6000;
 int actionIndex   = 0;
 
+Boolean autorun = false;
 
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
 
-abstract class  facadeVisualization{
- abstract void initVotes(ArrayList<Integer> votes);
- void addVote(int vote){}
- void update(){};
- abstract void draw();
-}
+
 
 
 void setup() {
@@ -47,30 +43,36 @@ void setup() {
 
   voteSets = new ArrayList<ArrayList<Integer>>();
   //test 20% 50% 80% 100 votes
-  voteSets.add(generateVotes(.2,50));
-  voteSets.add(generateVotes(.8,100));
+
   
   //test 20% 50% 80% 1000 votes 
   voteSets.add(generateVotes(.2,1000));
   voteSets.add(generateVotes(.5,400));
+  voteSets.add(generateVotes(.8,100));
   
   voteSetsIterator = voteSets.iterator();
   votes = new  ArrayList<Integer>(voteSetsIterator.next());
   
   //Init Visualizations
-  /*animations.add(new starFieldVisualization(#00B275,#FF7452,0.001,0.1)); 
+  //starFields positive color, negative color , number of stars
   animations.add(new starFieldVisualization(#0C64E8,#0DFFCD,10)); 
+  animations.add(new starFieldVisualization(#FF0887,#FF7308,50)); 
   animations.add(new starFieldVisualization(#FF0887,#FF7308,100)); 
-  animations.add(new starFieldVisualization(#FF0000,#0000FF,200)); 
-  */
+
+  //stripe, color of line , line Width
+  animations.add(new stripeVisualization(#FF0000,3));
   
-  animations.add(new stripeVisualization(#FFFFFF,3));
-  
+  //stack colorpositive , color negative , color of the line
   animations.add(new stackVisualization(#00B275,#FF7452,#FFFFFF));
   animations.add(new stackVisualization(#9958C4,#FFCD40,#FFFFFF));
   animations.add(new stackVisualization(#FF0000,#0000FF,#FF00FF));
-  
  
+   //barVisualization colorpositive , color negative , color of the line, line width
+  animations.add(new barVisualization(#9958C4,#FFCD40,#FFFFFF,3));
+  //physicsVisualization colorpositive , color negative , color of the line, line width
+  animations.add(new physicsVisualization(#00B275,#FF7452,#FFFFFF,3));
+ //waveVisualization colorpositive , color negative , color of the line, line width
+  animations.add(new waveVisualization(#00B275,#FF7452,#FFFFFF,3));
   
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
@@ -87,8 +89,16 @@ void draw() {
     anim.draw();
   aec.endDraw(); 
   aec.drawSides();
-  //updateSequence();
   
+  if(autorun){
+    updateSequence();
+  }
+  
+  pushStyle();
+  stroke(255);
+  fill(255);
+  text(anim.toString(),0,300);
+  popStyle();
 }
 
 ArrayList<Integer> generateVotes(float yesProb,int numOfvotes){
@@ -123,6 +133,14 @@ void keyPressed() {
    if(key == 's'){
       String filename = String.valueOf(year())+String.valueOf(month())+String.valueOf(day())+String.valueOf(hour())+String.valueOf(minute())+String.valueOf(second())+".png";
       save(filename);
+   }
+   if(key == 'a'){
+      autorun = !autorun;
+      if(autorun){
+        println("autorun:ON");
+      }else{
+        println("autorun:OFF");
+      }        
    }
    //voting keys{
      int vote=0;
