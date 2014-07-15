@@ -22,20 +22,9 @@ class stripeVisualization extends facadeVisualization{
   
   void addVote(int vote){
     super.addVote(vote);
-   // lineRow = round(map(yesVotes,0,totalVotes,0,24));
+
     Ani.to(this,1 ,"lineRow",round(map(yesVotes,0,totalVotes,0,24)),Ani.LINEAR);
-   /*
-    AniSequence seq = new AniSequence(Ani.papplet());
-    seq.beginStep();
-      seq.add(Ani.to(this,1 ,"lineAlpha",255 ,Ani.LINEAR));
-      seq.add(Ani.to(this,1 ,"linePos" ,40 ,Ani.LINEAR));
-    seq.endStep();
-    seq.add(Ani.to(this,1 ,"linePos" ,40*2 ,Ani.LINEAR));
-    seq.beginStep();
-      seq.add(Ani.to(this,1 ,"lineAlpha",0 ,Ani.LINEAR));
-      seq.add(Ani.to(this,1 ,"linePos" ,40*3 ,Ani.LINEAR));
-    seq.endStep();
-   */
+   
   }
     
   void update(){

@@ -15,10 +15,10 @@ Iterator<ArrayList<Integer>>   voteSetsIterator;
 facadeVisualization anim;
 
 int sequenceIndex = 0;
-int sequenceTime  = 6000;
+int sequenceTime  = 15000;
 int actionIndex   = 0;
 
-Boolean autorun = false;
+Boolean autorun = true;
 
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
@@ -47,32 +47,23 @@ void setup() {
   
   //test 20% 50% 80% 1000 votes 
   voteSets.add(generateVotes(.2,1000));
-  voteSets.add(generateVotes(.5,400));
+  /*voteSets.add(generateVotes(.5,400));
   voteSets.add(generateVotes(.8,100));
-  
+  */
   voteSetsIterator = voteSets.iterator();
   votes = new  ArrayList<Integer>(voteSetsIterator.next());
   
   //Init Visualizations
   //starFields positive color, negative color , number of stars
-  animations.add(new starFieldVisualization(#0C64E8,#0DFFCD,10)); 
-  animations.add(new starFieldVisualization(#FF0887,#FF7308,50)); 
-  animations.add(new starFieldVisualization(#FF0887,#FF7308,100)); 
-
-  //stripe, color of line , line Width
-  animations.add(new stripeVisualization(#FF0000,3));
+  //animations.add(new starFieldVisualization(#FF0000,#999999,20)); 
+  //trails  color0, color 1 , particles, min speed, max speed, blurlevel,alphaLevel pixelate
+  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.05,0.02,0,4,true)); 
+  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.05,0.02,0,4,false)); 
+  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.1,0.2,0,0,false)); 
+  //plasma
+  //plasma  color0, color 1 , particles, radius, blurlevel, pixelate
+  animations.add(new plasmaVisualization(color(255,0,0,126),color(255,255,255,126),50,50,10,false)); 
   
-  //stack colorpositive , color negative , color of the line
-  animations.add(new stackVisualization(#00B275,#FF7452,#FFFFFF));
-  animations.add(new stackVisualization(#9958C4,#FFCD40,#FFFFFF));
-  animations.add(new stackVisualization(#FF0000,#0000FF,#FF00FF));
- 
-   //barVisualization colorpositive , color negative , color of the line, line width
-  animations.add(new barVisualization(#9958C4,#FFCD40,#FFFFFF,3));
-  //physicsVisualization colorpositive , color negative , color of the line, line width
-  animations.add(new physicsVisualization(#00B275,#FF7452,#FFFFFF,3));
- //waveVisualization colorpositive , color negative , color of the line, line width
-  animations.add(new waveVisualization(#00B275,#FF7452,#FFFFFF,3));
   
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
@@ -82,14 +73,15 @@ void setup() {
 }
 
 void draw() {
+  
+  background(0);
   anim.update();
   aec.beginDraw();
-    background(0,0,0);
     noStroke();
+    noSmooth();
     anim.draw();
   aec.endDraw(); 
   aec.drawSides();
-  
   if(autorun){
     updateSequence();
   }
@@ -98,6 +90,11 @@ void draw() {
   stroke(255);
   fill(255);
   text(anim.toString(),0,300);
+  if(autorun){
+    text("autorun:ON",0,330);
+  }else{
+    text("autorun:OFF",0,330);
+  }
   popStyle();
 }
 

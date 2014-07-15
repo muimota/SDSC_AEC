@@ -5,7 +5,9 @@ STARFIELD
 
 class starFieldVisualization extends facadeVisualization{
   ArrayList<PVector> stars;
+  //stars highlighted because are recent votes
   ArrayList<PVector> votingStars;
+  //framenum when the vote was produced, is related with the star 
   ArrayList<Integer> votingFrames;
   //nomber of frames that a new vote glitters
   int glitterFrames  = 200;
@@ -16,8 +18,10 @@ class starFieldVisualization extends facadeVisualization{
   float minSpeed,maxSpeed;
   
  
-  starFieldVisualization(color col0,color col1,float _minSpeed,float _maxSpeed, int _maxStars ){
-     visualizationName = "starsVisualization";
+  starFieldVisualization(color col0,color col1,float _minSpeed,float _maxSpeed, int _maxStars){
+    super();
+    visualizationName = "starsVisualization";
+    
     starColors  =new color[2];
     starColors[0] = col0;
     starColors[1] = col1;
@@ -46,7 +50,7 @@ class starFieldVisualization extends facadeVisualization{
     for(int i=0;i<starsCount;i++){
       PVector star = new PVector();
       star.x = random(40);
-      star.y = random(24);
+      star.y = round(random(24));
       int voteIndex;
       if(starsCount>votes.size()){
         voteIndex = i;
@@ -99,7 +103,8 @@ class starFieldVisualization extends facadeVisualization{
        //last vote
        int votingStarIndex = votingStars.indexOf(star);
        if(votingStarIndex!=-1){
-         float glitter = (frameCount-votingFrames.get(votingStarIndex))/float(glitterFrames);
+         
+         float glitter = norm(frameCount-votingFrames.get(votingStarIndex),0,glitterFrames);
          if(glitter>1){
            votingStars.remove(votingStarIndex);
            votingFrames.remove(votingStarIndex);
@@ -120,3 +125,101 @@ class starFieldVisualization extends facadeVisualization{
   } 
 }
 
+/*Trails version*/
+class trailsVisualization extends starFieldVisualization{
+  int blurLevel;
+  float alphaLevel;
+  boolean pixelate;
+  trailsVisualization(color col0,color col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
+    super(col0,col1,minSpeed,maxSpeed,maxParticles );
+    blurLevel = _blurLevel;
+    alphaLevel = _alphaLevel;
+    pixelate = _pixelate;
+    visualizationName = "trailsVisualization";
+  }
+  void draw(){
+    hiFacade.beginDraw();
+    hiFacade.noStroke();
+    hiFacade.fill(color(0,0,0,alphaLevel));
+    hiFacade.rect(0,0,400,240);
+    for(int i=0;i<stars.size();i++){
+       PVector star = stars.get(i).get(); //use a copy of the star
+       
+      star.x*=10;
+      star.y*=10;
+       //last vote
+       int votingStarIndex = votingStars.indexOf(star);
+       if(votingStarIndex!=-1){
+         
+         float glitter = norm(frameCount-votingFrames.get(votingStarIndex),0,glitterFrames);
+         if(glitter>1){
+           votingStars.remove(votingStarIndex);
+           votingFrames.remove(votingStarIndex);
+         }
+        
+         color col = lerpColor(#FFFFFF,starColors[floor(star.z)],glitter);
+         hiFacade.fill(col);
+       }else{
+         hiFacade.fill(starColors[floor(star.z)]);
+       }
+       if(star.x<10){
+         hiFacade.rect(floor(star.x)-floor(star.x)%2,floor(star.y),10,15);
+       }else{
+         hiFacade.rect(floor(star.x),floor(star.y),10,10);
+       }
+      
+    }
+    hiFacade.filter(BLUR,blurLevel);
+    hiFacade.endDraw();
+    drawFacade(pixelate);
+  }
+  
+}
+/*smooth version*/
+class plasmaVisualization extends starFieldVisualization{
+  int blurLevel;
+  float particleRadius;
+  boolean pixelate;
+  plasmaVisualization(color col0,color col1,int maxParticles,float _particleRadius,int _blurLevel,boolean _pixelate){
+    super(col0,col1,0.1,0.5,maxParticles );
+    blurLevel = _blurLevel;
+    particleRadius = _particleRadius;
+    pixelate = _pixelate;
+    visualizationName = "plasmaVisualization";
+  }
+  void draw(){
+    hiFacade.beginDraw();
+    hiFacade.background(0);
+    hiFacade.noStroke();
+    for(int i=0;i<stars.size();i++){
+       PVector star = stars.get(i).get(); //use a copy of the star
+       
+      star.x*=10;
+      star.y*=10;
+       //last vote
+       int votingStarIndex = votingStars.indexOf(star);
+       if(votingStarIndex!=-1){
+         
+         float glitter = norm(frameCount-votingFrames.get(votingStarIndex),0,glitterFrames);
+         if(glitter>1){
+           votingStars.remove(votingStarIndex);
+           votingFrames.remove(votingStarIndex);
+         }
+        
+         color col = lerpColor(#FFFFFF,starColors[floor(star.z)],glitter);
+         hiFacade.fill(col);
+       }else{
+         hiFacade.fill(starColors[floor(star.z)]);
+       }
+       if(star.x<10){
+         hiFacade.ellipse(floor(star.x)-floor(star.x)%2,floor(star.y),particleRadius,particleRadius);
+       }else{
+         hiFacade.ellipse(floor(star.x),floor(star.y),particleRadius,particleRadius);
+       }
+      
+    }
+    hiFacade.filter(BLUR,blurLevel);
+    hiFacade.endDraw();
+    drawFacade(pixelate);
+  }
+}
