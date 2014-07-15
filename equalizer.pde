@@ -56,13 +56,21 @@ void setup() {
   //Init Visualizations
   //starFields positive color, negative color , number of stars
   //animations.add(new starFieldVisualization(#FF0000,#999999,20)); 
-  //trails  color0, color 1 , particles, min speed, max speed, blurlevel,alphaLevel pixelate
-  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.05,0.02,0,4,true)); 
-  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.05,0.02,0,4,false)); 
-  animations.add(new trailsVisualization(color(255,0,0,255),color(255,255,255,255),50,0.1,0.2,0,0,false)); 
+  //trails  color0, color 1 , particles, min speed, max speed, blurlevel,alphaLevel(length of the trail) pixelate
+
+  animations.add(new trailsVisualization(#004DFF,#999999,50,0.05,0.2,0,4,false)); 
+  animations.add(new trailsVisualization(#00DD63,#999999,50,0.05,0.2,0,4,false)); 
+  animations.add(new trailsVisualization(#E400E3,#999999,50,0.05,0.2,0,4,false)); 
+  animations.add(new trailsVisualization(#FF003B,#999999,50,0.05,0.2,0,4,false)); 
+  animations.add(new trailsVisualization(#FFE500,#999999,50,0.05,0.2,0,4,false)); 
   //plasma
-  //plasma  color0, color 1 , particles, radius, blurlevel, pixelate
-  animations.add(new plasmaVisualization(color(255,0,0,126),color(255,255,255,126),50,50,10,false)); 
+  //plasma  color0, color 1 , particles, min speed, max speed, radius, blurlevel, pixelate
+  animations.add(new plasmaVisualization(color(0,77,255,126),color(255,255,255,126),50,0.05,0.07, 50,7,false)); 
+  animations.add(new plasmaVisualization(color(0,221,6,126),color(255,255,255,126),50,0.05,0.1,50,5,false)); 
+  animations.add(new plasmaVisualization(color(228,0,227,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
+  animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
+  animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
+  
   
   
   animationIterator = animations.iterator();   

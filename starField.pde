@@ -180,8 +180,8 @@ class plasmaVisualization extends starFieldVisualization{
   int blurLevel;
   float particleRadius;
   boolean pixelate;
-  plasmaVisualization(color col0,color col1,int maxParticles,float _particleRadius,int _blurLevel,boolean _pixelate){
-    super(col0,col1,0.1,0.5,maxParticles );
+  plasmaVisualization(color col0,color col1,int maxParticles,float minSpeed,float maxSpeed,float _particleRadius,int _blurLevel,boolean _pixelate){
+    super(col0,col1,minSpeed,maxSpeed,maxParticles );
     blurLevel = _blurLevel;
     particleRadius = _particleRadius;
     pixelate = _pixelate;

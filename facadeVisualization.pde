@@ -61,6 +61,7 @@ abstract class  facadeVisualization{
     }else{
       lowFacade.copy(hiFacade,0,0,400,240,0,0,40,24);
     }
+    noSmooth();
     image(lowFacade,0,0);
   }
   
