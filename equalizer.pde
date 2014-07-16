@@ -47,9 +47,9 @@ void setup() {
   
   //test 20% 50% 80% 1000 votes 
   voteSets.add(generateVotes(.2,1000));
-  /*voteSets.add(generateVotes(.5,400));
+  //voteSets.add(generateVotes(.5,400));
   voteSets.add(generateVotes(.8,100));
-  */
+  
   voteSetsIterator = voteSets.iterator();
   votes = new  ArrayList<Integer>(voteSetsIterator.next());
   
@@ -57,20 +57,24 @@ void setup() {
   //starFields positive color, negative color , number of stars
   //animations.add(new starFieldVisualization(#FF0000,#999999,20)); 
   //trails  color0, color 1 , particles, min speed, max speed, blurlevel,alphaLevel(length of the trail) pixelate
-
-  animations.add(new trailsVisualization(#004DFF,#999999,50,0.05,0.2,0,4,false)); 
-  animations.add(new trailsVisualization(#00DD63,#999999,50,0.05,0.2,0,4,false)); 
-  animations.add(new trailsVisualization(#E400E3,#999999,50,0.05,0.2,0,4,false)); 
-  animations.add(new trailsVisualization(#FF003B,#999999,50,0.05,0.2,0,4,false)); 
-  animations.add(new trailsVisualization(#FFE500,#999999,50,0.05,0.2,0,4,false)); 
+  
+  animations.add(new trailsVisualization(#004DFF,#999999,50,0.5,10,0,10,true)); 
+  animations.add(new trailsVisualization(#00DD63,#999999,50,0.5,10,0,10,true));
+  animations.add(new trailsVisualization(#E400E3,#999999,50,0.5,10,0,10,true));
+  /*
+  animations.add(new trailsVisualization(#FF003B,#999999,50,0.5,10,0,10,false)); 
+  animations.add(new trailsVisualization(#FFE500,#999999,50,0.5,10,0,10,false)); 
+  */
   //plasma
   //plasma  color0, color 1 , particles, min speed, max speed, radius, blurlevel, pixelate
-  animations.add(new plasmaVisualization(color(0,77,255,126),color(255,255,255,126),50,0.05,0.07, 50,7,false)); 
-  animations.add(new plasmaVisualization(color(0,221,6,126),color(255,255,255,126),50,0.05,0.1,50,5,false)); 
-  animations.add(new plasmaVisualization(color(228,0,227,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
-  animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
-  animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.05,0.2,50,5,false)); 
-  
+  /*
+  animations.add(new plasmaVisualization(color(0,77,255,126),color(255,255,255,126),50,0.5,5, 50,7,false)); 
+  animations.add(new plasmaVisualization(color(0,221,6,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
+  animations.add(new plasmaVisualization(color(228,0,227,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
+  */
+  animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
+  animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
+
   
   
   animationIterator = animations.iterator();   

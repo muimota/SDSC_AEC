@@ -31,6 +31,8 @@ abstract class  facadeVisualization{
     }
     totalVotes=yesVotes+noVotes;
   }
+  void setParameter(String parametername,int parameterValue){}
+  void setParameter(String parametername,float parameterValue){}
   void update(){};
   abstract void draw();
   
@@ -61,7 +63,6 @@ abstract class  facadeVisualization{
     }else{
       lowFacade.copy(hiFacade,0,0,400,240,0,0,40,24);
     }
-    noSmooth();
     image(lowFacade,0,0);
   }
   
