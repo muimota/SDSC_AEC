@@ -23,6 +23,7 @@ abstract class  facadeVisualization{
     }
     totalVotes=yesVotes+noVotes; 
   }
+  
   void addVote(int vote){
     if(vote<0){
       yesVotes++;
@@ -31,9 +32,12 @@ abstract class  facadeVisualization{
     }
     totalVotes=yesVotes+noVotes;
   }
-  void setParameter(String parametername,int parameterValue){}
-  void setParameter(String parametername,float parameterValue){}
+  
+  void setParameter(String parameterName,int parameterValue){}
+  void setParameter(String parameterName,float parameterValue){}
+  
   void update(){};
+  
   abstract void draw();
   
   void drawFacade(boolean pixelate){
