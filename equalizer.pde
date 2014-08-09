@@ -27,8 +27,7 @@ participationModel pm;
     Ani.overwrite();
     
     //init dbCom
-    dcom dbCom          = new dcom(); 
-    
+    dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
     
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
