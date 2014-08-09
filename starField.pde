@@ -323,7 +323,11 @@ class plasmaVisualization extends starFieldVisualization{
     int numberOfStars = stars.size();
      for(int i=0;i<numberOfStars;i++){
        Star star = stars.get(i);
-       star.pos.x = (star.pos.x + star.speed.x) % (400.0+100.0);
+       float psize = map(star.expression,0,1,particleRadius,particleRadius*1.5);
+       star.pos.x = star.pos.x + star.speed.x;
+       if(star.pos.x>(400-psize)){
+         star.pos.x-=400;
+       }
      }
   }
   void draw(){
@@ -335,10 +339,10 @@ class plasmaVisualization extends starFieldVisualization{
        color voteColor = star.vote<0 ? col0:col1;  
        hiFacade.fill(voteColor);
        float psize = map(star.expression,0,1,particleRadius,particleRadius*1.5);
-       hiFacade.ellipse(floor(star.pos.x),floor(star.pos.y),psize,psize);
+       hiFacade.ellipse(star.pos.x,star.pos.y,psize,psize);
        //is a cloud exits from right side we draw it again in the left side 
-       if(star.pos.x>(400-psize/2)){
-         hiFacade.ellipse(floor(star.pos.x-400),floor(star.pos.y),psize,psize);
+      if(star.pos.x<psize){
+         hiFacade.ellipse(star.pos.x+400,star.pos.y,psize,psize);
        }
     }
     hiFacade.filter(BLUR,blurLevel);
