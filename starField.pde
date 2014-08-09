@@ -18,30 +18,79 @@ class Star{
 class starFieldVisualization extends facadeVisualization{
   ArrayList<Star> stars;
   int maxStars;
-  color starColors[];
+  color col0,col1;
   float minSpeed,maxSpeed;
   
  
-  starFieldVisualization(color col0,color col1,float _minSpeed,float _maxSpeed, int _maxStars){
+  starFieldVisualization(color _col0,color _col1,float _minSpeed,float _maxSpeed, int _maxStars){
     super();
+    parameters.add(new Parameter("minSpeed",0,17));
+    parameters.add(new Parameter("maxSpeed",0,17));
+    parameters.add(new Parameter("col0",Parameter.COLOR));
+    parameters.add(new Parameter("col1",Parameter.COLOR));
     visualizationName = "starsVisualization";
-    
-    starColors  =new color[2];
-    starColors[0] = col0;
-    starColors[1] = col1;
+    col0 = _col0;
+    col1 = _col1;
     minSpeed = _minSpeed;
     maxSpeed = _maxSpeed;
     maxStars = _maxStars;
   }
-  starFieldVisualization(color col0,color col1,float minSpeed,float maxSpeed ){
-    this(col0,col1,minSpeed,maxSpeed,10000);
+  starFieldVisualization(color _col0,color _col1,float minSpeed,float maxSpeed ){
+    this(_col0,_col1,minSpeed,maxSpeed,10000);
   }
   
-  starFieldVisualization(color col0,color col1,int maxStars){
-    this(col0,col1,1,5,maxStars );
+  starFieldVisualization(color _col0,color _col1,int maxStars){
+    this(_col0,_col1,1,5,maxStars );
   }
-  starFieldVisualization(color col0,color col1){
-    this(col0,col1,0.1,0.5 );
+  starFieldVisualization(color _col0,color _col1){
+    this(_col0,_col1,0.1,0.5 );
+  }
+  
+   void setFloatParameter(String parameterName,float parameterValue){
+    super.setFloatParameter(parameterName,parameterValue);
+    float prevMinSpeed = minSpeed;
+    float prevMaxSpeed = maxSpeed;
+    
+    if(parameterName.equals("minSpeed")){
+      minSpeed = parameterValue;
+    }else if(parameterName.equals("maxSpeed")){
+      maxSpeed = parameterValue;
+    }
+    if(prevMinSpeed!=minSpeed){
+        int starsCount = min(votes.size(),maxStars);
+        for(int i=0;i<starsCount;i++){
+          Star star = stars.get(i);
+          star.speed.x=map(star.speed.x,0,prevMinSpeed,0,minSpeed);
+        }
+    } 
+    
+  }
+  float getFloatParameter(String parameterName){
+     float returnValue = super.getFloatParameter(parameterName);
+     if(parameterName.equals("minSpeed")){
+       returnValue = minSpeed;
+     }else if(parameterName.equals("maxSpeed")){
+       returnValue = maxSpeed;
+     }
+     return returnValue;
+  };
+  
+  void setColorParameter(String parameterName,color parameterValue){
+    if(parameterName.equals("col0")){
+       col0 = parameterValue;
+     }else if(parameterName.equals("col1")){
+       col1 = parameterValue;
+     }
+  }
+  
+  color getColorParameter(String parameterName){
+    color parameterValue = super.getColorParameter(parameterName);
+    if(parameterName.equals("col0")){
+      parameterValue = col0;
+    }else if(parameterName.equals("col1")){
+      parameterValue = col1;
+    }
+    return parameterValue;
   }
   
   void initVotes(ArrayList<Integer> votes){
@@ -108,7 +157,7 @@ class starFieldVisualization extends facadeVisualization{
      hiFacade.rectMode(CENTER);
      for(int i=0;i<stars.size();i++){
        Star star = stars.get(i);  
-       color voteColor = star.vote<0 ? starColors[0]:starColors[1];  
+       color voteColor = star.vote<0 ? col0:col1;  
        
        color col = lerpColor(voteColor,#FFFFFF,star.expression);         
        hiFacade.fill(col);
@@ -132,13 +181,57 @@ class trailsVisualization extends starFieldVisualization{
   boolean pixelate;
   float flashLevel;
   color voteColor;
-  trailsVisualization(color col0,color col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
-    super(col0,col1,minSpeed,maxSpeed,maxParticles );
+  
+  trailsVisualization(color _col0,color _col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
+    super(_col0,_col1,minSpeed,maxSpeed,maxParticles );
+    parameters.add(new Parameter("blurLevel",0,10));
+    parameters.add(new Parameter("trailLevel",1,10));
+    
     blurLevel = _blurLevel;
     alphaLevel = _alphaLevel;
     pixelate = _pixelate;
     visualizationName = "trailsVisualization";
   }
+  
+   void setFloatParameter(String parameterName,float parameterValue){
+     
+    super.setFloatParameter(parameterName,parameterValue);
+    
+    if(parameterName.equals("blurLevel")){
+      blurLevel = round(parameterValue);
+    }else if(parameterName.equals("trailLevel")){
+      alphaLevel = map(parameterValue,1,10,10,1);
+    }
+  }
+  float getFloatParameter(String parameterName){
+     float returnValue = super.getFloatParameter(parameterName);
+     if(parameterName.equals("blurLevel")){
+       returnValue = round(blurLevel);
+     }else if(parameterName.equals("trailLevel")){
+       returnValue = map(alphaLevel,1,10,10,1);
+     }
+     println(returnValue);
+     return returnValue;
+  };
+  
+  void setColorParameter(String parameterName,color parameterValue){
+    if(parameterName.equals("col0")){
+       col0 = parameterValue;
+     }else if(parameterName.equals("col1")){
+       col1 = parameterValue;
+     }
+  }
+  
+  color getColorParameter(String parameterName){
+    color parameterValue = super.getColorParameter(parameterName);
+    if(parameterName.equals("col0")){
+      parameterValue = col0;
+    }else if(parameterName.equals("col1")){
+      parameterValue = col1;
+    }
+    return parameterValue;
+  }
+  
   void initVotes(ArrayList<Integer> votes){
     super.initVotes(votes);
     flashLevel=0;
@@ -147,7 +240,7 @@ class trailsVisualization extends starFieldVisualization{
     super.addVote(vote);
     flashLevel=1.0;
     Ani.to(this,1 ,"flashLevel",0,Ani.LINEAR);
-    voteColor = vote<0 ? starColors[0]:starColors[1]; 
+    voteColor = vote<0 ? col0:col1; 
   }
   void draw(){
     hiFacade.beginDraw();
@@ -159,7 +252,7 @@ class trailsVisualization extends starFieldVisualization{
     
     for(int i=0;i<stars.size();i++){
       Star star = stars.get(i);  
-      color voteColor = star.vote<0 ? starColors[0]:starColors[1];  
+      color voteColor = star.vote<0 ? col0:col1;  
        
       color col = lerpColor(voteColor,#FFFFFF,star.expression);         
       hiFacade.fill(col);
@@ -185,22 +278,53 @@ class plasmaVisualization extends starFieldVisualization{
   float flashLevel;
   color voteColor;
   
-  plasmaVisualization(color col0,color col1,int maxParticles,float minSpeed,float maxSpeed,float _particleRadius,int _blurLevel,boolean _pixelate){
-    super(col0,col1,minSpeed,maxSpeed,maxParticles );
+  plasmaVisualization(color _col0,color _col1,int maxParticles,float _minSpeed,float _maxSpeed,float _particleRadius,int _blurLevel,boolean _pixelate){
+    super(_col0,_col1,_minSpeed,_maxSpeed,maxParticles );
+    parameters.add(new Parameter("blurLevel",0,10));
+    parameters.add(new Parameter("size",0,100));
     blurLevel = _blurLevel;
     particleRadius = _particleRadius;
     pixelate = _pixelate;
     visualizationName = "plasmaVisualization";
   }
+  void setFloatParameter(String parameterName,float parameterValue){ 
+    super.setFloatParameter(parameterName,parameterValue);
+    if(parameterName.equals("blurLevel")){
+      blurLevel = round(parameterValue);
+    }
+    if(parameterName.equals("size")){
+       particleRadius = parameterValue;
+    }
+  }
+  float getFloatParameter(String parameterName){
+     float returnValue = super.getFloatParameter(parameterName);
+     if(parameterName.equals("blurLevel")){
+       returnValue = round(blurLevel);
+     }else if(parameterName.equals("size")){
+       returnValue = particleRadius;
+     }
+     return returnValue;
+  }; 
+ 
+  
   void initVotes(ArrayList<Integer> votes){
     super.initVotes(votes);
     flashLevel=0;
   }
   void addVote(int vote){
     super.addVote(vote);
-    voteColor = vote<0 ? starColors[0]:starColors[1];  
+    voteColor = vote<0 ? col0:col1;  
      flashLevel=1.0;
     Ani.to(this,1 ,"flashLevel",0,Ani.LINEAR);
+  }
+  
+  void update(){
+    //update positions
+    int numberOfStars = stars.size();
+     for(int i=0;i<numberOfStars;i++){
+       Star star = stars.get(i);
+       star.pos.x = (star.pos.x + star.speed.x) % (400.0+100.0);
+     }
   }
   void draw(){
     hiFacade.beginDraw();
@@ -208,10 +332,14 @@ class plasmaVisualization extends starFieldVisualization{
     hiFacade.noStroke();
     for(int i=0;i<stars.size();i++){
        Star star = stars.get(i); 
-       color voteColor = star.vote<0 ? starColors[0]:starColors[1];  
+       color voteColor = star.vote<0 ? col0:col1;  
        hiFacade.fill(voteColor);
        float psize = map(star.expression,0,1,particleRadius,particleRadius*1.5);
        hiFacade.ellipse(floor(star.pos.x),floor(star.pos.y),psize,psize);
+       //is a cloud exits from right side we draw it again in the left side 
+       if(star.pos.x>(400-psize/2)){
+         hiFacade.ellipse(floor(star.pos.x-400),floor(star.pos.y),psize,psize);
+       }
     }
     hiFacade.filter(BLUR,blurLevel);
     hiFacade.endDraw();

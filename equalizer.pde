@@ -1,8 +1,10 @@
 import java.util.Iterator;
 import de.looksgood.ani.*;
 
+import controlP5.*;
 
-AEC aec;
+
+AEC aec; 
 
 ArrayList<Integer> votes; //-2 NO,-1 RNO,1 RYES,2 YES
 
@@ -18,13 +20,11 @@ int sequenceIndex = 0;
 int sequenceTime  = 15000;
 int actionIndex   = 0;
 
-Boolean autorun = true;
+Boolean autorun = false;
 
+ControlP5 cp5;
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
-
-
-
 
 void setup() {
   frameRate(25);
@@ -44,7 +44,6 @@ void setup() {
   voteSets = new ArrayList<ArrayList<Integer>>();
   //test 20% 50% 80% 100 votes
 
-  
   //test 20% 50% 80% 1000 votes 
   voteSets.add(generateVotes(.2,1000));
   //voteSets.add(generateVotes(.5,400));
@@ -75,12 +74,12 @@ void setup() {
   animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
   animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
 
-  
-  
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
   anim.initVotes(votes);
   
+  //GUI
+  cp5 = new ControlP5(this);
   
 }
 
@@ -178,18 +177,21 @@ void keyPressed() {
 void addVote(int vote){
   votes.add(vote);
   anim.addVote(vote);
-   
- int positiveVotes = 0; 
- for(int i=0;i<votes.size();i++){
-  if(votes.get(i)<0){
-    positiveVotes++;
-  } 
- }
- int percentageOfPositiveVotes  = round(positiveVotes/float(votes.size())*100);
- println(votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
+  int positiveVotes = 0; 
+  for(int i=0;i<votes.size();i++){
+    if(votes.get(i)<0){
+      positiveVotes++;
+    } 
+   }
+  int percentageOfPositiveVotes  = round(positiveVotes/float(votes.size())*100);
+  println(votes.size() +" "+ positiveVotes +"  - "+percentageOfPositiveVotes+"% "+(100-percentageOfPositiveVotes)+"%");
 }
 
 void nextScene(){
+  //remove controller from the previus animation
+  for(Parameter p:anim.parameters){
+    cp5.remove(p.name);
+  }
   
   if(voteSetsIterator.hasNext() == false){
      voteSetsIterator = voteSets.iterator();
@@ -198,10 +200,26 @@ void nextScene(){
      }
      anim = animationIterator.next();
    }
+   
    votes = new ArrayList<Integer>(voteSetsIterator.next());
    Ani.killAll();
    anim.initVotes(votes);
+   PVector sliderCol = new PVector(750,0);
+   PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
    
+   for(Parameter p:anim.parameters){
+     if(p.type==Parameter.COLOR){
+       cp5.addColorPicker(p.name)
+       .setColorValue(anim.getColorParameter(p.name))
+       .setPosition(colorCol.x,colorCol.y);
+       colorCol.y+=65;
+     }else if(p.type==Parameter.NUMBER){
+       cp5.addSlider(p.name).setValue(anim.getFloatParameter(p.name))
+         .setPosition(sliderCol.x,sliderCol.y)
+         .setRange(p.minValue,p.maxValue);
+         sliderCol.y+=15;
+     }
+   }
 }
 
 void updateSequence(){
@@ -222,6 +240,22 @@ void updateSequence(){
     }
   }
 }
-void mousePressed(){
-  println("x:"+mouseX/aec.getScaleX()+" y:"+mouseY/aec.getScaleY());
+
+void controlEvent(ControlEvent theEvent) {
+  String parameterName = theEvent.getName();
+  Parameter parameter = null;
+  //find parameter in animation parameters
+  for(Parameter p:anim.parameters){
+    if(parameterName.equals(p.name)){
+      parameter  = p;
+      break;
+    }
+  }
+  if(parameter.type==Parameter.NUMBER){
+    anim.setFloatParameter(parameterName,cp5.get(parameterName).getValue());
+  }else if(parameter.type==Parameter.COLOR){
+    color col = ((ColorPicker)cp5.get(parameterName)).getColorValue();
+    anim.setColorParameter(parameterName,col);
+  }
+  
 }

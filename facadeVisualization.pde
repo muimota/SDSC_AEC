@@ -6,10 +6,12 @@ abstract class  facadeVisualization{
   PGraphics hiFacade;  //hiresolution 400x240
   PImage    lowFacade; //low res 40x24 facade 
   
+  ArrayList<Parameter> parameters;
+  
   facadeVisualization(){
-   
     hiFacade  = createGraphics(400,240);
     lowFacade = new PImage(40,24);
+    parameters = new ArrayList<Parameter>();
   }
   
   void initVotes(ArrayList<Integer> votes){
@@ -31,12 +33,21 @@ abstract class  facadeVisualization{
     }
     totalVotes=yesVotes+noVotes;
   }
-  void setParameter(String parametername,int parameterValue){}
-  void setParameter(String parametername,float parameterValue){}
+  
+  
+  void  setFloatParameter(String parameterName,float parameterValue){};
+  float getFloatParameter(String parameterName){return Float.NaN;};
+  
+  void   setColorParameter(String parameterName,color parameterValue){}
+  color  getColorParameter(String parameterName){return 0;};
+  
+  
+  
   void update(){};
   abstract void draw();
   
   void drawFacade(boolean pixelate){
+    //TODO:pixelate should be removed, is not efficent and useless
     if(!pixelate){
       //pixelate
       hiFacade.loadPixels();
@@ -71,3 +82,5 @@ abstract class  facadeVisualization{
     return "name:"+visualizationName +" totalVotes:" +totalVotes +" positiveVotes"+ yesVotes +"("+percentageOfYesVotes+"%) negativeVotes:"+noVotes+"("+(100-percentageOfYesVotes)+"%)";
   }
 }
+
+
