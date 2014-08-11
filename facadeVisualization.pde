@@ -25,6 +25,7 @@ abstract class  facadeVisualization{
     }
     totalVotes=yesVotes+noVotes; 
   }
+  
   void addVote(int vote){
     if(vote<0){
       yesVotes++;
@@ -34,13 +35,16 @@ abstract class  facadeVisualization{
     totalVotes=yesVotes+noVotes;
   }
   
+
   void  setFloatParameter(String parameterName,float parameterValue){};
   float getFloatParameter(String parameterName){return Float.NaN;};
   
   void   setColorParameter(String parameterName,color parameterValue){}
   color  getColorParameter(String parameterName){return 0;};
+
   
   void update(){};
+  
   abstract void draw();
   
   void drawFacade(boolean pixelate){
