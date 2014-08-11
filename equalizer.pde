@@ -60,17 +60,6 @@ void setup() {
   animations.add(new trailsVisualization(#004DFF,#999999,50,0.5,10,0,10,true)); 
   animations.add(new trailsVisualization(#00DD63,#999999,50,0.5,10,0,10,true));
   animations.add(new trailsVisualization(#E400E3,#999999,50,0.5,10,0,10,true));
-  /*
-  animations.add(new trailsVisualization(#FF003B,#999999,50,0.5,10,0,10,false)); 
-  animations.add(new trailsVisualization(#FFE500,#999999,50,0.5,10,0,10,false)); 
-  */
-  //plasma
-  //plasma  color0, color 1 , particles, min speed, max speed, radius, blurlevel, pixelate
-  /*
-  animations.add(new plasmaVisualization(color(0,77,255,126),color(255,255,255,126),50,0.5,5, 50,7,false)); 
-  animations.add(new plasmaVisualization(color(0,221,6,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
-  animations.add(new plasmaVisualization(color(228,0,227,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
-  */
   animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
   animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
 
