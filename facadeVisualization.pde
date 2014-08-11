@@ -17,7 +17,7 @@ abstract class  facadeVisualization{
   void initVotes(ArrayList<Integer> votes){
     yesVotes=noVotes=0;
     for (int vote : votes){
-      if(vote<0){
+      if(vote>0){
         yesVotes++;
       }else{
         noVotes++;

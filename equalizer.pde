@@ -23,7 +23,7 @@ int actionIndex   = 0;
 Boolean autorun = false;
 
 ControlP5 cp5;
-//martin 23/05/2014
+
 //yes 2 , rather yer 1 , rather no -1 , no -2
 
 void setup() {
@@ -76,11 +76,10 @@ void setup() {
 
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
-  anim.initVotes(votes);
-  
+  anim.initVotes(votes); 
   //GUI
   cp5 = new ControlP5(this);
-  
+  createAnimationGUI();
 }
 
 void draw() {
@@ -188,10 +187,8 @@ void addVote(int vote){
 }
 
 void nextScene(){
-  //remove controller from the previus animation
-  for(Parameter p:anim.parameters){
-    cp5.remove(p.name);
-  }
+  
+  clearAnimationGUI();
   
   if(voteSetsIterator.hasNext() == false){
      voteSetsIterator = voteSets.iterator();
@@ -204,9 +201,19 @@ void nextScene(){
    votes = new ArrayList<Integer>(voteSetsIterator.next());
    Ani.killAll();
    anim.initVotes(votes);
-   PVector sliderCol = new PVector(750,0);
+    createAnimationGUI();   
+   }
+void clearAnimationGUI(){
+  //remove controller from the previus animation
+  for(Parameter p:anim.parameters){
+    cp5.remove(p.name);
+  }
+}
+
+void createAnimationGUI(){
+  PVector sliderCol = new PVector(750,0);
    PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
-   
+
    for(Parameter p:anim.parameters){
      if(p.type==Parameter.COLOR){
        cp5.addColorPicker(p.name)

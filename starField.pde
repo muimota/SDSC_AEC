@@ -157,7 +157,7 @@ class starFieldVisualization extends facadeVisualization{
      hiFacade.rectMode(CENTER);
      for(int i=0;i<stars.size();i++){
        Star star = stars.get(i);  
-       color voteColor = star.vote<0 ? col0:col1;  
+       color voteColor = star.vote>0 ? col0:col1;  
        
        color col = lerpColor(voteColor,#FFFFFF,star.expression);         
        hiFacade.fill(col);
@@ -240,7 +240,7 @@ class trailsVisualization extends starFieldVisualization{
     super.addVote(vote);
     flashLevel=1.0;
     Ani.to(this,1 ,"flashLevel",0,Ani.LINEAR);
-    voteColor = vote<0 ? col0:col1; 
+    voteColor = vote>0 ? col0:col1; 
   }
   void draw(){
     hiFacade.beginDraw();
@@ -252,7 +252,7 @@ class trailsVisualization extends starFieldVisualization{
     
     for(int i=0;i<stars.size();i++){
       Star star = stars.get(i);  
-      color voteColor = star.vote<0 ? col0:col1;  
+      color voteColor = star.vote>0 ? col0:col1;  
        
       color col = lerpColor(voteColor,#FFFFFF,star.expression);         
       hiFacade.fill(col);
@@ -313,7 +313,7 @@ class plasmaVisualization extends starFieldVisualization{
   }
   void addVote(int vote){
     super.addVote(vote);
-    voteColor = vote<0 ? col0:col1;  
+    voteColor = vote>0 ? col0:col1;  
      flashLevel=1.0;
     Ani.to(this,1 ,"flashLevel",0,Ani.LINEAR);
   }
