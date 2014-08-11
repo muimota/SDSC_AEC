@@ -34,14 +34,11 @@ abstract class  facadeVisualization{
     totalVotes=yesVotes+noVotes;
   }
   
-  
   void  setFloatParameter(String parameterName,float parameterValue){};
   float getFloatParameter(String parameterName){return Float.NaN;};
   
   void   setColorParameter(String parameterName,color parameterValue){}
   color  getColorParameter(String parameterName){return 0;};
-  
-  
   
   void update(){};
   abstract void draw();
@@ -81,6 +78,7 @@ abstract class  facadeVisualization{
     int percentageOfYesVotes = (totalVotes > 0) ? round(yesVotes/float(totalVotes)*100.0) : 0;
     return "name:"+visualizationName +" totalVotes:" +totalVotes +" positiveVotes"+ yesVotes +"("+percentageOfYesVotes+"%) negativeVotes:"+noVotes+"("+(100-percentageOfYesVotes)+"%)";
   }
+  
 }
 
 

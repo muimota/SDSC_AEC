@@ -57,18 +57,24 @@ void setup() {
   //animations.add(new starFieldVisualization(#FF0000,#999999,20)); 
   //trails  color0, color 1 , particles, min speed, max speed, blurlevel,alphaLevel(length of the trail) pixelate
   
-  animations.add(new trailsVisualization(#004DFF,#999999,50,0.5,10,0,10,true)); 
-  animations.add(new trailsVisualization(#00DD63,#999999,50,0.5,10,0,10,true));
-  animations.add(new trailsVisualization(#E400E3,#999999,50,0.5,10,0,10,true));
-  animations.add(new plasmaVisualization(color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
-  animations.add(new plasmaVisualization(color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
+  animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
+  animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
+  animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
+  animations.add(new plasmaVisualization("Category4",color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
+  animations.add(new plasmaVisualization("Category5",color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
+
+  for(facadeVisualization vis:animations){
+    loadVisualization(vis);
+  }
 
   animationIterator = animations.iterator();   
   anim = animationIterator.next();
   anim.initVotes(votes); 
   //GUI
   cp5 = new ControlP5(this);
+  cp5.addButton("SAVE CONFIG", 0, 10, 360, 58, 30);
   createAnimationGUI();
+  
 }
 
 void draw() {
@@ -237,8 +243,46 @@ void updateSequence(){
   }
 }
 
+void loadVisualization(facadeVisualization vis){
+  String filePath = dataPath("visualizations/"+vis.visualizationName+".cfg");
+  File file = new File(filePath);
+  if(!file.exists()){
+    println("no config file for:"+vis.visualizationName);
+    return;
+  }
+  String[] params = loadStrings(filePath);
+  
+  for(String param:params){
+    String chunks[] = param.split(":");
+    vis.setColorParameter(chunks[0],parseInt(chunks[1]));
+    vis.setFloatParameter(chunks[0],parseFloat(chunks[1]));
+  }
+}
+
+void saveVisualization(facadeVisualization vis){
+  String[] params = new String[vis.parameters.size()];
+  for(int i=0;i<vis.parameters.size();i++){
+    Parameter param = vis.parameters.get(i);
+    String name = param.name;
+    String value;
+    if(param.type==Parameter.COLOR){
+      value = Integer.toString(vis.getColorParameter(param.name));
+    }else{
+      value = Float.toString(vis.getFloatParameter(param.name));
+    }
+    params[i] = name+":"+value;
+  } 
+  saveStrings("data/visualizations/"+vis.visualizationName+".cfg",params);
+}
+
 void controlEvent(ControlEvent theEvent) {
   String parameterName = theEvent.getName();
+  
+  if(parameterName.equals("SAVE CONFIG")){
+    saveVisualization(anim);
+    return;
+  } 
+ 
   Parameter parameter = null;
   //find parameter in animation parameters
   for(Parameter p:anim.parameters){

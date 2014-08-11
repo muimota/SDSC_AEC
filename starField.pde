@@ -16,34 +16,34 @@ class Star{
 
 
 class starFieldVisualization extends facadeVisualization{
-  ArrayList<Star> stars;
+  ArrayList<Star> stars = null;
   int maxStars;
   color col0,col1;
   float minSpeed,maxSpeed;
   
  
-  starFieldVisualization(color _col0,color _col1,float _minSpeed,float _maxSpeed, int _maxStars){
+  starFieldVisualization(String _visualizationName,color _col0,color _col1,float _minSpeed,float _maxSpeed, int _maxStars){
     super();
     parameters.add(new Parameter("minSpeed",0,17));
     parameters.add(new Parameter("maxSpeed",0,17));
     parameters.add(new Parameter("col0",Parameter.COLOR));
     parameters.add(new Parameter("col1",Parameter.COLOR));
-    visualizationName = "starsVisualization";
+    visualizationName = _visualizationName;
     col0 = _col0;
     col1 = _col1;
     minSpeed = _minSpeed;
     maxSpeed = _maxSpeed;
     maxStars = _maxStars;
   }
-  starFieldVisualization(color _col0,color _col1,float minSpeed,float maxSpeed ){
-    this(_col0,_col1,minSpeed,maxSpeed,10000);
+  starFieldVisualization(String _visualizationName,color _col0,color _col1,float minSpeed,float maxSpeed ){
+    this(_visualizationName,_col0,_col1,minSpeed,maxSpeed,10000);
   }
   
-  starFieldVisualization(color _col0,color _col1,int maxStars){
-    this(_col0,_col1,1,5,maxStars );
+  starFieldVisualization(String _visualizationName,color _col0,color _col1,int maxStars){
+    this(_visualizationName,_col0,_col1,1,5,maxStars );
   }
-  starFieldVisualization(color _col0,color _col1){
-    this(_col0,_col1,0.1,0.5 );
+  starFieldVisualization(String _visualizationName,color _col0,color _col1){
+    this(_visualizationName,_col0,_col1,0.1,0.5 );
   }
   
    void setFloatParameter(String parameterName,float parameterValue){
@@ -56,11 +56,14 @@ class starFieldVisualization extends facadeVisualization{
     }else if(parameterName.equals("maxSpeed")){
       maxSpeed = parameterValue;
     }
+    
     if(prevMinSpeed!=minSpeed){
         int starsCount = min(votes.size(),maxStars);
-        for(int i=0;i<starsCount;i++){
-          Star star = stars.get(i);
-          star.speed.x=map(star.speed.x,0,prevMinSpeed,0,minSpeed);
+        if(stars!=null){
+          for(int i=0;i<starsCount;i++){
+            Star star = stars.get(i);
+            star.speed.x=map(star.speed.x,0,prevMinSpeed,0,minSpeed);
+          }
         }
     } 
     
@@ -182,15 +185,14 @@ class trailsVisualization extends starFieldVisualization{
   float flashLevel;
   color voteColor;
   
-  trailsVisualization(color _col0,color _col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
-    super(_col0,_col1,minSpeed,maxSpeed,maxParticles );
+  trailsVisualization(String _visualizationName,color _col0,color _col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
+    super(_visualizationName,_col0,_col1,minSpeed,maxSpeed,maxParticles );
     parameters.add(new Parameter("blurLevel",0,10));
     parameters.add(new Parameter("trailLevel",1,10));
     
     blurLevel = _blurLevel;
     alphaLevel = _alphaLevel;
     pixelate = _pixelate;
-    visualizationName = "trailsVisualization";
   }
   
    void setFloatParameter(String parameterName,float parameterValue){
@@ -210,7 +212,6 @@ class trailsVisualization extends starFieldVisualization{
      }else if(parameterName.equals("trailLevel")){
        returnValue = map(alphaLevel,1,10,10,1);
      }
-     println(returnValue);
      return returnValue;
   };
   
@@ -278,14 +279,13 @@ class plasmaVisualization extends starFieldVisualization{
   float flashLevel;
   color voteColor;
   
-  plasmaVisualization(color _col0,color _col1,int maxParticles,float _minSpeed,float _maxSpeed,float _particleRadius,int _blurLevel,boolean _pixelate){
-    super(_col0,_col1,_minSpeed,_maxSpeed,maxParticles );
+  plasmaVisualization(String _visualizationName,color _col0,color _col1,int maxParticles,float _minSpeed,float _maxSpeed,float _particleRadius,int _blurLevel,boolean _pixelate){
+    super(_visualizationName,_col0,_col1,_minSpeed,_maxSpeed,maxParticles );
     parameters.add(new Parameter("blurLevel",0,10));
     parameters.add(new Parameter("size",0,100));
     blurLevel = _blurLevel;
     particleRadius = _particleRadius;
     pixelate = _pixelate;
-    visualizationName = "plasmaVisualization";
   }
   void setFloatParameter(String parameterName,float parameterValue){ 
     super.setFloatParameter(parameterName,parameterValue);
