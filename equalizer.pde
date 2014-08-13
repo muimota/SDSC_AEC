@@ -31,10 +31,10 @@ participationModel pm;
     
     //init dbCom
     dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
-    
+    //dcom dbCom = new dcom("locahost","3306","SCSD","scsd","scsd");
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
-    animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
+    animations.add(new starFieldVisualization("Category1",#004DFF,#999999)); 
     animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
     animations.add(new plasmaVisualization("Category4",color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
@@ -80,25 +80,33 @@ participationModel pm;
      }
      
   }
+
   
+void clearAnimationGUI(){
+  //remove controller from the previus animation
+  for(Parameter p:pm.anim.parameters){
+    cp5.remove(p.name);
+  }
+}
+
 
 void createAnimationGUI(){
   PVector sliderCol = new PVector(750,0);
-   PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
-
-   for(Parameter p:anim.parameters){
-     if(p.type==Parameter.COLOR){
-       cp5.addColorPicker(p.name)
-       .setColorValue(anim.getColorParameter(p.name))
-       .setPosition(colorCol.x,colorCol.y);
-       colorCol.y+=65;
-     }else if(p.type==Parameter.NUMBER){
-       cp5.addSlider(p.name).setValue(anim.getFloatParameter(p.name))
-         .setPosition(sliderCol.x,sliderCol.y)
-         .setRange(p.minValue,p.maxValue);
-         sliderCol.y+=15;
-     }
+  PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
+  
+  for(Parameter p:pm.anim.parameters){
+    if(p.type==Parameter.COLOR){
+      cp5.addColorPicker(p.name)
+      .setColorValue(pm.anim.getColorParameter(p.name))
+      .setPosition(colorCol.x,colorCol.y);
+      colorCol.y+=65;
+    }else if(p.type==Parameter.NUMBER){
+      cp5.addSlider(p.name).setValue(pm.anim.getFloatParameter(p.name))
+      .setPosition(sliderCol.x,sliderCol.y)
+      .setRange(p.minValue,p.maxValue);
+      sliderCol.y+=15;
    }
+  }
 }
 
 void loadVisualization(facadeVisualization vis){
@@ -133,27 +141,33 @@ void saveVisualization(facadeVisualization vis){
   saveStrings("data/visualizations/"+vis.visualizationName+".cfg",params);
 }
 
+//controlp5 handler
+
 void controlEvent(ControlEvent theEvent) {
   String parameterName = theEvent.getName();
   
   if(parameterName.equals("SAVE CONFIG")){
-    saveVisualization(anim);
+    saveVisualization(pm.anim);
     return;
   } 
  
   Parameter parameter = null;
   //find parameter in animation parameters
-  for(Parameter p:anim.parameters){
+  for(Parameter p:pm.anim.parameters){
     if(parameterName.equals(p.name)){
       parameter  = p;
       break;
     }
   }
+  
   if(parameter.type==Parameter.NUMBER){
-    anim.setFloatParameter(parameterName,cp5.get(parameterName).getValue());
+    float parameterValue = cp5.get(parameterName).getValue();
+    //println(parameterName+" -> "+parameterValue);
+    //pm.anim.setFloatParameter(parameterName,cp5.get(parameterName).getValue());
+    pm.anim.setFloatParameter(parameterName,parameterValue);
   }else if(parameter.type==Parameter.COLOR){
     color col = ((ColorPicker)cp5.get(parameterName)).getColorValue();
-    anim.setColorParameter(parameterName,col);
+    pm.anim.setColorParameter(parameterName,col);
   }  
 }
 

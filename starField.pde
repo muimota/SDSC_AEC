@@ -48,6 +48,7 @@ class starFieldVisualization extends facadeVisualization{
   
    void setFloatParameter(String parameterName,float parameterValue){
     super.setFloatParameter(parameterName,parameterValue);
+   
     float prevMinSpeed = minSpeed;
     float prevMaxSpeed = maxSpeed;
     
@@ -56,9 +57,9 @@ class starFieldVisualization extends facadeVisualization{
     }else if(parameterName.equals("maxSpeed")){
       maxSpeed = parameterValue;
     }
-    
+     
     if(prevMinSpeed!=minSpeed){
-        int starsCount = min(votes.size(),maxStars);
+        int starsCount = min(stars.size(),maxStars);
         if(stars!=null){
           for(int i=0;i<starsCount;i++){
             Star star = stars.get(i);
@@ -66,7 +67,6 @@ class starFieldVisualization extends facadeVisualization{
           }
         }
     } 
-    
   }
   float getFloatParameter(String parameterName){
      float returnValue = super.getFloatParameter(parameterName);
