@@ -58,7 +58,7 @@ class starFieldVisualization extends facadeVisualization{
     }
     
     if(prevMinSpeed!=minSpeed){
-        int starsCount = min(votes.size(),maxStars);
+        int starsCount = min(stars.size(),maxStars);
         if(stars!=null){
           for(int i=0;i<starsCount;i++){
             Star star = stars.get(i);
