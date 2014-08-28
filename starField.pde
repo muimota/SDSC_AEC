@@ -203,6 +203,7 @@ class trailsVisualization extends starFieldVisualization{
   int stack;
   boolean heartSeq=false;
   int stacks[];
+  int yesRow;
   
   //heart parameters
   float accelerationTime= 1.0;
@@ -301,6 +302,10 @@ class trailsVisualization extends starFieldVisualization{
   }
   
   void heart(){
+    if(heartSeq){
+      return;
+    }
+    
     heartSeq  =true;
     
     int numberOfStars = stars.size();
@@ -315,8 +320,8 @@ class trailsVisualization extends starFieldVisualization{
          star.speed.x=minSpeed*lerp(random(1),0.8,1.2);
        }
     }
-    int yesRow=floor(yesRatio*23)*10;    
-    int noRow =floor(yesRatio*23)*10+10;
+    yesRow=floor(yesRatio*22)*10;    
+    println(yesRow);
     for(int i=0;i<numberOfStars;i++){
       Star star = stars.get(i);
       AniSequence seq = new AniSequence(Ani.papplet());
@@ -328,7 +333,7 @@ class trailsVisualization extends starFieldVisualization{
         starY=yesRow;
       }else{
         //starY=round(random(yesRatio*230,230));
-        starY=noRow;
+        starY=yesRow+10;
       }
        //we have to make copies of variables for Ani return to original values
       float posy = star.pos.y;
@@ -397,8 +402,6 @@ class trailsVisualization extends starFieldVisualization{
     } 
   }
   void draw(){
-    float yesRatio = yesVotes/float(totalVotes);
-    int yesRow = floor(yesRatio*23)*10;
     hiFacade.beginDraw();
     hiFacade.noStroke();
     
@@ -422,7 +425,7 @@ class trailsVisualization extends starFieldVisualization{
     if(stack==1){
       hiFacade.rectMode(CORNER);
       for(int i=0;i<24;i++){
-        if(i<yesRow){ 
+        if(i<=yesRow/10){ 
           hiFacade.fill(col0);
         }else{
           hiFacade.fill(col1);
