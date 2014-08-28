@@ -13,15 +13,15 @@ class participationModel implements DashboardListener{
   }
   
   void categorySelected(int catID){
-    
      Ani.killAll();
-     clearAnimationGUI();
+     //clearAnimationGUI();
      anim = animations.get(catID);
      updateVotes();
       println(catID+" -> "+votes.size() );
      anim.initVotes(votes);
      loadVisualization(anim);
-     createAnimationGUI();
+   
+     //createAnimationGUI();
      
   }
   void sentimentSubmitted(int prefID, String cardID){
@@ -34,6 +34,9 @@ class participationModel implements DashboardListener{
   }
   void specialCategorySelected(int val){
     println("heart event (" + val +")");
+    if(val==0){
+      anim.heart();
+    }
   }
   
   

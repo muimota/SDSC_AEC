@@ -1,6 +1,5 @@
 import java.util.Iterator;
 import de.looksgood.ani.*;
-
 import controlP5.*;
 
 AEC aec; 
@@ -11,12 +10,11 @@ ArrayList<Integer> votes; //-2 NO,-1 RNO,1 RYES,2 YES
 ControlP5 cp5;
 participationModel pm;
 
+ArrayList<String> controllerList;
+
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
-<<<<<<< HEAD
-
-
-  void setup() {
+void setup() {
     frameRate(25);
     size(1200, 400);
     
@@ -29,6 +27,10 @@ participationModel pm;
     Ani.init(this);
     Ani.overwrite();
     
+    //GUI
+    cp5 = new ControlP5(this);
+    cp5.addButton("SAVE CONFIG", 0, 10, 360, 58, 30);
+    
     //init dbCom
     //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
     dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
@@ -37,16 +39,15 @@ participationModel pm;
     animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
     animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category4",#004DFF,#999999,50,0.5,10,0,10,true)); 
+    animations.add(new trailsVisualization("Category5",#00DD63,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category6",#E400E3,#999999,50,0.5,10,0,10,true));
   
     pm = new participationModel(animations);
     pm.dbCom = dbCom;
     dbCom.setDashboardListener(pm);    
     dbCom.start();
-    
-    //GUI
-    cp5 = new ControlP5(this);
-    cp5.addButton("SAVE CONFIG", 0, 10, 360, 58, 30);
-    createAnimationGUI();
+   
 }
   
   void draw() {
@@ -80,9 +81,11 @@ participationModel pm;
 
 void clearAnimationGUI(){
   //remove controller from the previus animation
+ 
   for(Parameter p:pm.anim.parameters){
     cp5.remove(p.name);
   }
+ 
 }
 
 
@@ -91,6 +94,7 @@ void createAnimationGUI(){
   PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
   
   for(Parameter p:pm.anim.parameters){
+    println(p.name+" - "+pm.anim.getFloatParameter(p.name));
     if(p.type==Parameter.COLOR){
       cp5.addColorPicker(p.name)
       .setColorValue(pm.anim.getColorParameter(p.name))
@@ -100,8 +104,7 @@ void createAnimationGUI(){
       cp5.addSlider(p.name).setValue(pm.anim.getFloatParameter(p.name))
       .setPosition(sliderCol.x,sliderCol.y)
       .setRange(p.minValue,p.maxValue);
-      sliderCol.y+=15;
-   }
+      sliderCol.y+=15;;    }
   }
 }
 
