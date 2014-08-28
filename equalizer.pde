@@ -12,6 +12,8 @@ participationModel pm;
 
 ArrayList<String> controllerList;
 
+int prevCategory=-1,category=-1;
+
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
 void setup() {
@@ -79,7 +81,7 @@ void setup() {
      
   }
 
-void clearAnimationGUI(){
+void  clearAnimationGUI(){
   //remove controller from the previus animation
  
   for(Parameter p:pm.anim.parameters){
@@ -161,8 +163,6 @@ void controlEvent(ControlEvent theEvent) {
   
   if(parameter.type==Parameter.NUMBER){
     float parameterValue = cp5.get(parameterName).getValue();
-    //println(parameterName+" -> "+parameterValue);
-    //pm.anim.setFloatParameter(parameterName,cp5.get(parameterName).getValue());
     pm.anim.setFloatParameter(parameterName,parameterValue);
   }else if(parameter.type==Parameter.COLOR){
     color col = ((ColorPicker)cp5.get(parameterName)).getColorValue();

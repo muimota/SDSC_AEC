@@ -13,18 +13,24 @@ abstract class  facadeVisualization{
     lowFacade = new PImage(40,24);
     parameters = new ArrayList<Parameter>();
   }
-  
-  void initVotes(ArrayList<Integer> votes){
-    yesVotes=noVotes=0;
-    for (int vote : votes){
-      if(vote>0){
-        yesVotes++;
-      }else{
-        noVotes++;
-      }
-    }
+  void initVotes(int _yesVotes,int _noVotes){
+    yesVotes=_yesVotes;
+    noVotes=_noVotes;
     totalVotes=yesVotes+noVotes; 
   }
+  void initVotes(ArrayList<Integer> votes){
+    int _yesVotes=0;
+    int _noVotes=0;
+    for (int vote : votes){
+      if(vote>0){
+        _yesVotes++;
+      }else{
+        _noVotes++;
+      }
+    }
+    initVotes(_yesVotes,_noVotes); 
+  }
+ 
   
   void addVote(int vote){
     if(vote<0){

@@ -17,7 +17,7 @@ class Star{
 
 
 class starFieldVisualization extends facadeVisualization{
-  ArrayList<Star> stars = null;
+  ArrayList<Star> stars = new ArrayList<Star>();
   int maxStars;
   color col0,col1;
   float minSpeed,maxSpeed;
@@ -50,14 +50,15 @@ class starFieldVisualization extends facadeVisualization{
   void setFloatParameter(String parameterName,float parameterValue){
     super.setFloatParameter(parameterName,parameterValue);
    
-    float prevMinSpeed = minSpeed;
-    float prevMaxSpeed = maxSpeed;
+    float prevMinSpeed = this.minSpeed;
+    float prevMaxSpeed = this.maxSpeed;
     
     if(parameterName.equals("minSpeed")){
       minSpeed = parameterValue;
     }else if(parameterName.equals("maxSpeed")){
       maxSpeed = parameterValue;
     }else if(parameterName.equals("maxStars")){
+      
       maxStars = floor(parameterValue);
       //reduce the number of stars
       if(maxStars<stars.size()){
@@ -65,8 +66,8 @@ class starFieldVisualization extends facadeVisualization{
         for(int i=0;i<removeCount;i++){
           stars.remove(0); 
         }
-      }else if(maxStars<votes.size()){
-        initVotes(votes);
+      }else if(maxStars<totalVotes){
+        initVotes(yesVotes,noVotes);
       }
     }
      
@@ -111,10 +112,17 @@ class starFieldVisualization extends facadeVisualization{
     return parameterValue;
   }
   
-  void initVotes(ArrayList<Integer> votes){
-    super.initVotes(votes);
+  void initVotes(int _yesVotes,int _noVotes){
+    super.initVotes(_yesVotes,_noVotes);
     stars = new ArrayList<Star>();
-    int starsCount = min(votes.size(),maxStars);
+    int starsCount = min(totalVotes,maxStars);
+    int yesStars;
+    
+    if(starsCount>totalVotes){
+      yesStars = yesVotes;
+    }else{
+      yesStars = round((yesVotes/(float)totalVotes)*maxStars);
+    }
     
     for(int i=0;i<starsCount;i++){
       Star star = new Star();
@@ -125,20 +133,20 @@ class starFieldVisualization extends facadeVisualization{
       //speed
       star.speed.x=minSpeed*lerp(random(1),0.8,1.2);
       
-      int voteIndex;
-      //we will add all the votes
-      if(starsCount>votes.size()){
-        voteIndex = i;
+      
+      if(i<yesStars){
+        star.vote = 1;
       }else{
-       //if we have to 'cluster' all the vote pick a random sample        
-        voteIndex = int(random(votes.size()));
-      }
-      star.vote = votes.get(voteIndex);
+        star.vote = -1;
+      } 
       star.expression = 0;
       stars.add(star);
     }
   }
-  
+  void initVotes(ArrayList<Integer> votes){
+    super.initVotes(votes);
+    initVotes(yesVotes,noVotes);
+  }
   void addVote(int vote){
     super.addVote(vote);
     
