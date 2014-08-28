@@ -1,3 +1,4 @@
+//this is in a java file to be able to have static values
 class Parameter{
   
   final static int NUMBER = 0;

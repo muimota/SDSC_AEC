@@ -3,7 +3,6 @@ import de.looksgood.ani.*;
 
 import controlP5.*;
 
-
 AEC aec; 
 
 ArrayList<Integer> votes; //-2 NO,-1 RNO,1 RYES,2 YES
@@ -25,7 +24,6 @@ Boolean autorun = false;
 ControlP5 cp5;
 
 //yes 2 , rather yer 1 , rather no -1 , no -2
-
 void setup() {
   frameRate(25);
   size(1200, 400);
@@ -45,9 +43,8 @@ void setup() {
   //test 20% 50% 80% 100 votes
 
   //test 20% 50% 80% 1000 votes 
-  voteSets.add(generateVotes(.2,1000));
-  //voteSets.add(generateVotes(.5,400));
-  voteSets.add(generateVotes(.8,100));
+  voteSets.add(generateVotes(.2,50));
+  voteSets.add(generateVotes(.0,0));
   
   voteSetsIterator = voteSets.iterator();
   votes = new  ArrayList<Integer>(voteSetsIterator.next());
@@ -60,10 +57,9 @@ void setup() {
   animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
   animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
   animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
-  animations.add(new plasmaVisualization("Category4",color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
-  animations.add(new plasmaVisualization("Category5",color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
 
   for(facadeVisualization vis:animations){
+    vis.initVotes(votes); 
     loadVisualization(vis);
   }
 
@@ -131,6 +127,11 @@ void keyPressed() {
    if(key == ' '){
      nextScene();
    }
+   
+   if(key == 'h'){
+     anim.heart();
+   }
+   
    //save screenshot
    if(key == 's'){
       String filename = String.valueOf(year())+String.valueOf(month())+String.valueOf(day())+String.valueOf(hour())+String.valueOf(minute())+String.valueOf(second())+".png";
@@ -164,6 +165,7 @@ void keyPressed() {
        hasVoted=false;
    } 
    if(hasVoted){
+     votes.add(vote);
      addVote(vote);
    }
 }
@@ -184,7 +186,7 @@ void addVote(int vote){
 void nextScene(){
   
   clearAnimationGUI();
-  
+ 
   if(voteSetsIterator.hasNext() == false){
      voteSetsIterator = voteSets.iterator();
      if(animationIterator.hasNext()==false){
