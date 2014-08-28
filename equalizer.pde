@@ -30,8 +30,8 @@ participationModel pm;
     Ani.overwrite();
     
     //init dbCom
-    dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
-    //dcom dbCom = new dcom("locahost","3306","SCSD","scsd","scsd");
+    //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
+    dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
     animations.add(new starFieldVisualization("Category1",#004DFF,#999999)); 
