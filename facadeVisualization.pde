@@ -47,6 +47,7 @@ abstract class  facadeVisualization{
   
   abstract void draw();
   
+  void heart(){};
   void drawFacade(boolean pixelate){
     //TODO:pixelate should be removed, is not efficent and useless
     if(!pixelate){

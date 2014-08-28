@@ -3,7 +3,6 @@ import de.looksgood.ani.*;
 
 import controlP5.*;
 
-
 AEC aec; 
 
 
@@ -14,6 +13,7 @@ participationModel pm;
 
 //martin 23/05/2014
 //yes 2 , rather yer 1 , rather no -1 , no -2
+<<<<<<< HEAD
 
 
   void setup() {
@@ -34,13 +34,10 @@ participationModel pm;
     dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
-    animations.add(new starFieldVisualization("Category1",#004DFF,#999999)); 
+    animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
     animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
-    animations.add(new plasmaVisualization("Category4",color(255,0,59,126),color(255,255,255,126),50,0.5,1,50,5,false)); 
-    animations.add(new plasmaVisualization("Category5",color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
-    animations.add(new plasmaVisualization("Category6",color(255,229,0,126),color(255,255,255,126),50,0.5,0.5,50,5,false)); 
-    
+  
     pm = new participationModel(animations);
     pm.dbCom = dbCom;
     dbCom.setDashboardListener(pm);    
@@ -81,7 +78,6 @@ participationModel pm;
      
   }
 
-  
 void clearAnimationGUI(){
   //remove controller from the previus animation
   for(Parameter p:pm.anim.parameters){
