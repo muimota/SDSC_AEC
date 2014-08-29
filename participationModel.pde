@@ -4,25 +4,33 @@ class participationModel implements DashboardListener{
   ArrayList<Integer> votes;
   facadeVisualization anim;
   dcom dbCom;
+  int category;
+  boolean categoryChanged;
   
   participationModel(ArrayList<facadeVisualization> _animations){
     votes = new ArrayList<Integer>();
     animations =  _animations;
     anim  = animations.get(0);
     anim.initVotes(votes);
+    categoryChanged=false;
   }
   
   void categorySelected(int catID){
-     Ani.killAll();
-     clearAnimationGUI();
-     anim = animations.get(catID);
-     updateVotes();
-      println(catID+" -> "+votes.size() );
-     anim.initVotes(votes);
-     loadVisualization(anim);
-     createAnimationGUI();
-     
+    category = catID;
+    categoryChanged=true;
   }
+  void changeCategory(){
+    Ani.killAll();
+    clearAnimationGUI();
+    anim = animations.get(category);
+    updateVotes();
+    println(category+" -> "+votes.size() );
+    anim.initVotes(votes);
+    loadVisualization(anim);
+    createAnimationGUI(); 
+    categoryChanged=false;
+  }
+  
   void sentimentSubmitted(int prefID, String cardID){
      if(prefID==0){
         anim.addVote(-1);

@@ -1,6 +1,8 @@
 import java.util.Iterator;
+import java.util.Collections;
 import de.looksgood.ani.*;
 import controlP5.*;
+
 
 AEC aec; 
 
@@ -38,12 +40,12 @@ void setup() {
     dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
-    animations.add(new trailsVisualization("Category1",#004DFF,#999999,50,0.5,10,0,10,true)); 
-    animations.add(new trailsVisualization("Category2",#00DD63,#999999,50,0.5,10,0,10,true));
-    animations.add(new trailsVisualization("Category3",#E400E3,#999999,50,0.5,10,0,10,true));
-    animations.add(new trailsVisualization("Category4",#004DFF,#999999,50,0.5,10,0,10,true)); 
-    animations.add(new trailsVisualization("Category5",#00DD63,#999999,50,0.5,10,0,10,true));
-    animations.add(new trailsVisualization("Category6",#E400E3,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category0",#004DFF,#999999,50,0.5,10,0,10,true)); 
+    animations.add(new trailsVisualization("Category1",#00DD63,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category2",#E400E3,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category3",#004DFF,#999999,50,0.5,10,0,10,true)); 
+    animations.add(new trailsVisualization("Category4",#00DD63,#999999,50,0.5,10,0,10,true));
+    animations.add(new trailsVisualization("Category5",#E400E3,#999999,50,0.5,10,0,10,true));
   
     pm = new participationModel(animations);
     pm.dbCom = dbCom;
@@ -53,6 +55,10 @@ void setup() {
 }
   
   void draw() {
+    if(pm.categoryChanged){
+      pm.changeCategory();
+    }
+    
     
     background(0);
     pm.anim.update();

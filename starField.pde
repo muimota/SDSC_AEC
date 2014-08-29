@@ -132,8 +132,7 @@ class starFieldVisualization extends facadeVisualization{
       star.pos.y = floor(random(24))*10;
       //speed
       star.speed.x=minSpeed*lerp(random(1),0.8,1.2);
-      
-      
+     
       if(i<yesStars){
         star.vote = 1;
       }else{
@@ -142,6 +141,7 @@ class starFieldVisualization extends facadeVisualization{
       star.expression = 0;
       stars.add(star);
     }
+    Collections.shuffle(stars);
   }
   void initVotes(ArrayList<Integer> votes){
     super.initVotes(votes);
@@ -402,6 +402,7 @@ class trailsVisualization extends starFieldVisualization{
   }
   void addVote(int vote){
     //add Vote only if a heart animation is not running
+    println("vote!");
     if(stack==0){
       super.addVote(vote);
       flashLevel=1.0;
