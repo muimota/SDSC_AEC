@@ -4,7 +4,7 @@ class participationModel implements DashboardListener{
   ArrayList<Integer> votes;
   facadeVisualization anim;
   dcom dbCom;
-  int category;
+  private int catID,prevCatID;
   boolean categoryChanged;
   
   participationModel(ArrayList<facadeVisualization> _animations){
@@ -13,24 +13,33 @@ class participationModel implements DashboardListener{
     anim  = animations.get(0);
     anim.initVotes(votes);
     categoryChanged=false;
+    prevCatID=-4;
+   
   }
   
-  void categorySelected(int catID){
-    category = catID;
-    categoryChanged=true;
+  void categorySelected(int _catID){
+    println("categorySelected called");
+    catID = _catID;
   }
-  void changeCategory(){
+  
+  void updateCategory(){
     Ani.killAll();
     clearAnimationGUI();
-    anim = animations.get(category);
+    anim = animations.get(catID);
     updateVotes();
-    println(category+" -> "+votes.size() );
+    println(votes.size());
     anim.initVotes(votes);
-    loadVisualization(anim);
     createAnimationGUI(); 
     categoryChanged=false;
   }
-  
+  //called from main thread to check if the category has changed 
+  void update(){
+    println("update "+prevCatID+","+catID);
+    if(prevCatID!=catID){
+      updateCategory();
+      prevCatID=catID;
+    } 
+  }
   void sentimentSubmitted(int prefID, String cardID){
      if(prefID==0){
         anim.addVote(-1);
@@ -49,7 +58,9 @@ class participationModel implements DashboardListener{
   //update votes from database
   void updateVotes(){
     votes.clear();
-    for(DatabaseParticipant participant: dbCom.getParticipants()){
+    ArrayList<DatabaseParticipant> participants = dbCom.getParticipants();
+    
+    for(DatabaseParticipant participant: participants){
       //SDSC code votes 0,1,2 here <0 >0 for positive/negative votes
       if(participant.getPrefID()<2){
         votes.add(-1);
@@ -57,5 +68,6 @@ class participationModel implements DashboardListener{
         votes.add(1);
       }
     }
+    println("participants:"+participants.size()+" votes:"+votes.size());
   }
 }

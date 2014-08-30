@@ -35,9 +35,6 @@ void setup() {
     cp5 = new ControlP5(this);
     cp5.addButton("SAVE CONFIG", 0, 10, 360, 58, 30);
     
-    //init dbCom
-    //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
-    dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
     animations.add(new trailsVisualization("Category0",#004DFF,#999999,50,0.5,10,0,10,true)); 
@@ -46,19 +43,24 @@ void setup() {
     animations.add(new trailsVisualization("Category3",#004DFF,#999999,50,0.5,10,0,10,true)); 
     animations.add(new trailsVisualization("Category4",#00DD63,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category5",#E400E3,#999999,50,0.5,10,0,10,true));
-  
+    
+    for(facadeVisualization vis:animations){
+      loadVisualization(vis);
+    }
+    
+    //init dbCom
+    //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
+    dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     pm = new participationModel(animations);
     pm.dbCom = dbCom;
-    dbCom.setDashboardListener(pm);    
+    pm.dbCom.setDashboardListener(pm);
     dbCom.start();
-   
+    
 }
   
   void draw() {
-    if(pm.categoryChanged){
-      pm.changeCategory();
-    }
-    
+    //this could be modified 
+    pm.update();    
     
     background(0);
     pm.anim.update();
@@ -102,7 +104,6 @@ void createAnimationGUI(){
   PVector colorCol  = new PVector(sliderCol.x+155,sliderCol.y);
   
   for(Parameter p:pm.anim.parameters){
-    println(p.name+" - "+pm.anim.getFloatParameter(p.name));
     if(p.type==Parameter.COLOR){
       cp5.addColorPicker(p.name)
       .setColorValue(pm.anim.getColorParameter(p.name))

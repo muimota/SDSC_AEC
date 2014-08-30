@@ -115,16 +115,15 @@ class starFieldVisualization extends facadeVisualization{
   void initVotes(int _yesVotes,int _noVotes){
     super.initVotes(_yesVotes,_noVotes);
     stars = new ArrayList<Star>();
-    int starsCount = min(totalVotes,maxStars);
+    int totalStars = min(totalVotes,maxStars);
     int yesStars;
     
-    if(starsCount>totalVotes){
-      yesStars = yesVotes;
-    }else{
+    if(totalStars<totalVotes){
       yesStars = round((yesVotes/(float)totalVotes)*maxStars);
+    }else{
+      yesStars = yesVotes; 
     }
-    
-    for(int i=0;i<starsCount;i++){
+    for(int i=0;i<totalStars;i++){
       Star star = new Star();
       //position
       star.pos.x = random(400);
@@ -328,20 +327,20 @@ class trailsVisualization extends starFieldVisualization{
          star.speed.x=minSpeed*lerp(random(1),0.8,1.2);
        }
     }
-    yesRow=floor(yesRatio*22)*10;    
-    println(yesRow);
+    //from row 1 to 22
+    yesRow=(23-floor(yesRatio*22))*10;    
     for(int i=0;i<numberOfStars;i++){
       Star star = stars.get(i);
       AniSequence seq = new AniSequence(Ani.papplet());
       seq.beginSequence();
      
       int starY;
-      if(star.vote>0){
+      if(star.vote>0){//yes
         //starY=round(random(0,yesRatio*230));   
         starY=yesRow;
-      }else{
+      }else{//no
         //starY=round(random(yesRatio*230,230));
-        starY=yesRow+10;
+        starY=yesRow-10;
       }
        //we have to make copies of variables for Ani return to original values
       float posy = star.pos.y;
@@ -402,7 +401,6 @@ class trailsVisualization extends starFieldVisualization{
   }
   void addVote(int vote){
     //add Vote only if a heart animation is not running
-    println("vote!");
     if(stack==0){
       super.addVote(vote);
       flashLevel=1.0;
@@ -434,7 +432,7 @@ class trailsVisualization extends starFieldVisualization{
     if(stack==1){
       hiFacade.rectMode(CORNER);
       for(int i=0;i<24;i++){
-        if(i<=yesRow/10){ 
+        if(i>=yesRow/10){ 
           hiFacade.fill(col0);
         }else{
           hiFacade.fill(col1);
@@ -455,4 +453,3 @@ class trailsVisualization extends starFieldVisualization{
     }
   }
 }
-
