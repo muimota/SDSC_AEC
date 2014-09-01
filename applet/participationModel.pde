@@ -37,14 +37,11 @@ class participationModel implements DashboardListener{
       updateCategory();
     }   
   }
-  //in the device 2 (right) negative, 1 (negative positive 
-  
   void sentimentSubmitted(int prefID, String cardID){
-    println(prefID);
-    if(prefID==2){
-        anim.addVote(1);
-      }else{
+     if(prefID==0){
         anim.addVote(-1);
+      }else{
+        anim.addVote(1);
       }
   }
   void specialCategorySelected(int val){
@@ -61,12 +58,11 @@ class participationModel implements DashboardListener{
     ArrayList<DatabaseParticipant> participants = dbCom.getParticipants();
     
     for(DatabaseParticipant participant: participants){
-     //in the device 2 (right) negative, 1 (negative positive 
-     println(participant.getPrefID());
-      if(participant.getPrefID()==2){
-        votes.add(1);
-      }else{
+      //SDSC code votes 0,1,2 here <0 >0 for positive/negative votes
+      if(participant.getPrefID()<2){
         votes.add(-1);
+      }else{
+        votes.add(1);
       }
     }
     println("participants:"+participants.size()+" votes:"+votes.size());

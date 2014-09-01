@@ -33,7 +33,7 @@ abstract class  facadeVisualization{
  
   
   void addVote(int vote){
-    if(vote>0){
+    if(vote<0){
       yesVotes++;
     }else{
       noVotes++;
@@ -87,7 +87,7 @@ abstract class  facadeVisualization{
   
   String toString(){
     int percentageOfYesVotes = (totalVotes > 0) ? round(yesVotes/float(totalVotes)*100.0) : 0;
-    return "name:"+visualizationName +" totalVotes:" +totalVotes +" negativeVotes: "+noVotes+"("+(100-percentageOfYesVotes)+"%) positiveVotes: "+ yesVotes +"("+percentageOfYesVotes+"%)";
+    return "name:"+visualizationName +" totalVotes:" +totalVotes +" positiveVotes"+ yesVotes +"("+percentageOfYesVotes+"%) negativeVotes:"+noVotes+"("+(100-percentageOfYesVotes)+"%)";
   }
   
 }
