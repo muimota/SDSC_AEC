@@ -25,7 +25,7 @@ class starFieldVisualization extends facadeVisualization{
   starFieldVisualization(String _visualizationName,color _col0,color _col1,float _minSpeed,float _maxSpeed, int _maxStars){
     super();
     parameters.add(new Parameter("maxStars",1,200));
-    parameters.add(new Parameter("minSpeed",0,17));
+    parameters.add(new Parameter("minSpeed",0,2));
     parameters.add(new Parameter("maxSpeed",0,17));
     parameters.add(new Parameter("col0",Parameter.COLOR));
     parameters.add(new Parameter("col1",Parameter.COLOR));
