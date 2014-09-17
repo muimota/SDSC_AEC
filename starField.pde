@@ -212,6 +212,9 @@ class trailsVisualization extends starFieldVisualization{
   int stacks[];
   int yesRow;
   
+  color expressionColor;
+  
+  
   //heart parameters
   float accelerationTime= 1.0;
   float speedFactor     = 1.0;
@@ -220,9 +223,10 @@ class trailsVisualization extends starFieldVisualization{
   float stackingTime    = 1.0;
   float organizeTime    = 1.0;
   float speedDownTime   = 1.0;
-  
+  float lineWidth       = 0.0;
   trailsVisualization(String _visualizationName,color _col0,color _col1,int maxParticles,float minSpeed,float maxSpeed, int _blurLevel,float _alphaLevel,boolean _pixelate){
     super(_visualizationName,_col0,_col1,minSpeed,maxSpeed,maxParticles );
+    
     parameters.add(new Parameter("blurLevel",0,10));
     parameters.add(new Parameter("trailLevel",0,10));
     parameters.add(new Parameter("accelerationTime",0,10));
@@ -232,6 +236,8 @@ class trailsVisualization extends starFieldVisualization{
     parameters.add(new Parameter("stackingTime",0,10));
     parameters.add(new Parameter("organizeTime",0,10));
     parameters.add(new Parameter("speedDownTime",0,10));
+    parameters.add(new Parameter("lineWidth",0,1));
+    parameters.add(new Parameter("expressionColor",Parameter.COLOR));
     
     blurLevel = _blurLevel;
     alphaLevel = _alphaLevel;
@@ -240,6 +246,8 @@ class trailsVisualization extends starFieldVisualization{
     stack = 0;
     stacks = new int[24];
     stackReset();
+    
+    
   }
   
   void setFloatParameter(String parameterName,float parameterValue){
@@ -264,6 +272,8 @@ class trailsVisualization extends starFieldVisualization{
       organizeTime = parameterValue;
     }else if(parameterName.equals("speedDownTime")){
       speedDownTime = parameterValue;
+    }else if(parameterName.equals("lineWidth")){
+      lineWidth = parameterValue;
     }
   }
   float getFloatParameter(String parameterName){
@@ -286,24 +296,23 @@ class trailsVisualization extends starFieldVisualization{
        returnValue = organizeTime;
      }else if(parameterName.equals("speedDownTime")){
        returnValue = speedDownTime;
+     }else if(parameterName.equals("lineWidth")){
+       returnValue = lineWidth;
      }
      return returnValue;
   };
   
   void setColorParameter(String parameterName,color parameterValue){
-    if(parameterName.equals("col0")){
-       col0 = parameterValue;
-     }else if(parameterName.equals("col1")){
-       col1 = parameterValue;
+    super.setColorParameter(parameterName,parameterValue);
+    if(parameterName.equals("expressionColor")){
+       expressionColor = parameterValue;
      }
   }
   
   color getColorParameter(String parameterName){
     color parameterValue = super.getColorParameter(parameterName);
-    if(parameterName.equals("col0")){
-      parameterValue = col0;
-    }else if(parameterName.equals("col1")){
-      parameterValue = col1;
+    if(parameterName.equals("expressionColor")){
+      parameterValue = expressionColor;
     }
     return parameterValue;
   }
@@ -328,19 +337,24 @@ class trailsVisualization extends starFieldVisualization{
        }
     }
     //from row 1 to 22
+    //yesRow=(23-floor(yesRatio*22))*10;    
     yesRow=(23-floor(yesRatio*22))*10;    
+    
     for(int i=0;i<numberOfStars;i++){
       Star star = stars.get(i);
       AniSequence seq = new AniSequence(Ani.papplet());
       seq.beginSequence();
      
       int starY;
-      if(star.vote>0){//yes
-        //starY=round(random(0,yesRatio*230));   
-        starY=yesRow;
+      /*DIRTY fix , misundertanding , negatives down
+      yesRow should be noRow*/
+      
+      if(star.vote<0){//yes , lower part
+        starY=floor(random(yesRow/10,23*lineWidth))*10+10;   
+        //starY=yesRow;
       }else{//no
-        //starY=round(random(yesRatio*230,230));
-        starY=yesRow-10;
+        starY=floor(random(yesRow/10*(1-lineWidth),yesRow/10))*10;
+        //starY=yesRow-10;
       }
        //we have to make copies of variables for Ani return to original values
       float posy = star.pos.y;
@@ -381,7 +395,7 @@ class trailsVisualization extends starFieldVisualization{
      for(int i=0;i<numberOfStars;i++){
        Star star = stars.get(i);
        //if no stacking
-       if(stack==0){
+       if(true || stack==0){
          star.pos.x = (star.pos.x + star.speed.x) % 400.0;
        }else{
          int row = round(star.pos.y/10);
@@ -408,6 +422,8 @@ class trailsVisualization extends starFieldVisualization{
       voteColor = vote>0 ? col0:col1;
     } 
   }
+  
+  
   void draw(){
     hiFacade.beginDraw();
     hiFacade.noStroke();
@@ -423,7 +439,7 @@ class trailsVisualization extends starFieldVisualization{
       }
       color voteColor = star.vote>0 ? col0:col1;  
        
-      color col = lerpColor(voteColor,#FFFFFF,star.expression);         
+      color col = lerpColor(voteColor,expressionColor,star.expression);         
       hiFacade.fill(col);
       int size = floor(map(star.expression,0,1,10,50)); 
       hiFacade.rect(floor(star.pos.x),floor(star.pos.y),size,size);
@@ -444,7 +460,6 @@ class trailsVisualization extends starFieldVisualization{
     hiFacade.filter(BLUR,blurLevel);
     hiFacade.endDraw();
     drawFacade(pixelate);
-    
     //flash in votes
     if(flashLevel>0){
       color flashColor=color(red(voteColor),green(voteColor),blue(voteColor),flashLevel*255);

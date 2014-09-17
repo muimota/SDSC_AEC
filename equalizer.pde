@@ -25,7 +25,6 @@ void setup() {
     aec = new AEC();
     aec.init();
    
-    
     //Init Ani library
     Ani.init(this);
     Ani.overwrite();
@@ -37,8 +36,8 @@ void setup() {
     
     ArrayList<facadeVisualization> animations = new ArrayList<facadeVisualization>();
     
-    animations.add(new trailsVisualization("Category0",#004DFF,#999999,50,0.5,10,0,10,false)); 
-    animations.add(new trailsVisualization("Category1",#00DD63,#999999,50,0.5,10,0,10,false));
+    animations.add(new trailsVisualization("Category0",#004DFF,#999999,50,0.5,10,0,10,true)); 
+    animations.add(new trailsVisualization("Category1",#00DD63,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category2",#E400E3,#999999,50,0.5,10,0,10,true));
     animations.add(new trailsVisualization("Category3",#004DFF,#999999,50,0.5,10,0,10,true)); 
     animations.add(new trailsVisualization("Category4",#00DD63,#999999,50,0.5,10,0,10,true));
@@ -49,16 +48,18 @@ void setup() {
     }
     
     //init dbCom
-    //dcom dbCom   = new dcom("192.168.5.146","3306","scsd","scsduser","smart2014"); 
-    //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
-    dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
+    
+    dcom dbCom   = new dcom("192.168.5.146","3306","scsd","scsduser","smart2014"); 
+    //dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
+    
     pm = new participationModel(animations);
     pm.dbCom = dbCom;
     pm.dbCom.setDashboardListener(pm);
     dbCom.start();
     
 }
-  
+ 
+ 
   void draw() {
     //this could be modified 
     pm.update();    
