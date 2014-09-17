@@ -50,6 +50,7 @@ void setup() {
     //init dbCom
     
     dcom dbCom   = new dcom("192.168.5.146","3306","scsd","scsduser","smart2014"); 
+    //dcom dbCom   = new dcom("23karat.de","3306","karat_SCSD","karat_49","****"); 
     //dcom dbCom = new dcom("localhost","3306","SCSD","scsd","scsd");
     
     pm = new participationModel(animations);
